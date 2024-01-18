@@ -1,7 +1,5 @@
 <script setup>
-import { ref } from 'vue';
 import { usePrimeVue } from 'primevue/config';
-import { useLayout } from './composables/layout';
 
 defineProps({
     simple: {

@@ -1,6 +1,5 @@
 <script setup>
 import { onMounted, ref, watch } from 'vue';
-import { useLayout } from '@/layouts/composables/layout';
 
 const { layoutConfig } = useLayout();
 

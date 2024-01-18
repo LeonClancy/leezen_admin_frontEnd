@@ -1,5 +1,4 @@
 <script setup>
-import { useLayout } from './composables/layout';
 import { computed } from 'vue';
 const { layoutConfig } = useLayout();
 const logoUrl = computed(() => {
