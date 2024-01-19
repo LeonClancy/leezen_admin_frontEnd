@@ -1,6 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
     typescript: true,
+    devtools: { enabled: true },
     app: {
         head: {
             title: 'Sakai Vue',
@@ -14,7 +15,10 @@ export default defineNuxtConfig({
             ]
         }
     },
-    modules: ['nuxt-primevue'],
+    modules: [
+        '@pinia/nuxt',
+        'nuxt-primevue'
+    ],
     primevue: {
         options: { ripple: true },
         components: {

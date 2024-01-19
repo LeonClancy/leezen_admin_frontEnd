@@ -1,6 +1,8 @@
 <script setup>
 import AppConfig from '@/layouts/AppConfig.vue';
+import { useAuthStore } from "@/store/useAuthStore"
 const { layoutConfig } = useLayout();
+const { setAuth } = useAuthStore()
 const email = ref('');
 const password = ref('');
 const checked = ref(false);
@@ -11,6 +13,10 @@ definePageMeta({
 
 async function fetchLogin(){
     if(email.value === 'gn01792218@hotmail.com' && password.value){
+        setAuth({
+            isLogin:true,
+            token:'adminToken'
+        })
         navigateTo('/')
     }else{
         alert('帳號錯誤')
