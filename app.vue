@@ -1,13 +1,13 @@
-<script setup>
-    useHead({
-		title:'里仁Admin'
-	})
-</script>
-
 <template>
     <NuxtLayout>
-        <NuxtPage />
+        <NuxtPage/>
     </NuxtLayout>
+  
 </template>
 
-<style lang="scss"></style>
+<script setup lang="ts">
+useHead({
+    title:'里仁Admin'
+})
+
+</script>

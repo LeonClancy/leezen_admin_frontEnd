@@ -1,7 +1,7 @@
-<script setup>
+<script setup lang="ts">
 import AppConfig from '@/layouts/AppConfig.vue';
 import { useAuthStore } from "@/store/useAuthStore"
-const { layoutConfig } = useLayout();
+// const { layoutConfig } = useLayout();
 const { setAuth } = useAuthStore()
 const email = ref('');
 const password = ref('');
@@ -30,6 +30,9 @@ async function fetchLogin(){
             <img src="~/assets/images/login_logo.jpg" alt="Sakai logo" class="mb-5 w-6rem flex-shrink-0" />
             <div style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)">
                 <div class="w-full surface-card py-8 px-5 sm:px-8" style="border-radius: 53px">
+                    <div class="flex justify-content-center">
+                        <p class="text-3xl text-900">使用者登入</p>
+                    </div>
                     <div>
                         <label for="email1" class="block text-900 text-xl font-medium mb-2">Email</label>
                         <InputText id="email1" v-model="email" type="text" placeholder="Email address" class="w-full md:w-30rem mb-5" style="padding: 1rem" />
@@ -43,6 +46,12 @@ async function fetchLogin(){
                                 <label for="rememberme1">Remember me</label>
                             </div>
                             <a class="font-medium no-underline ml-2 text-right cursor-pointer" style="color: var(--primary-color)">Forgot password?</a>
+                        </div>
+                         <div class="flex align-items-center justify-content-between mb-5 gap-5">
+                            <div class="flex align-items-center">
+                                <label for="rememberme1">還沒有帳號?</label>
+                            </div>
+                            <NuxtLink to="/auth/SignUp"> 去註冊 </NuxtLink>
                         </div>
                         <Button label="登入" class="w-full p-3 text-xl" @click="fetchLogin"></Button>
                     </div>
