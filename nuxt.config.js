@@ -56,7 +56,7 @@ export default defineNuxtConfig({
                 }
             }
         }
-    }
+    },
     // nitro:{
     //     devProxy:{
     //         '/api':{

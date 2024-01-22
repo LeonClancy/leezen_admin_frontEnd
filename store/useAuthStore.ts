@@ -14,9 +14,6 @@ export const useAuthStore = defineStore("authStore", () => {
   //state
   const auth = ref<Auth>(initState.auth);
 
-  //gatters
-  //寫法參考 const unStockInModels = computed(()=> auth.value.filter(model => model.status === ModelStatus.未入庫))
-
   //actions
   function setAuth(payload:Auth){
     auth.value = payload
