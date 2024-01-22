@@ -1,12 +1,14 @@
 <script setup lang="ts">
-// import AppConfig from '@/layouts/AppConfig.vue';
-const { layoutConfig } = useLayout();
-
+import AppConfig from '@/layouts/AppConfig.vue';
 import { AuthRegistry } from "@/types/auth"
+import useAuthAPI from "@/composables/api/useAuthAPI"
+const { registry } = useAuthAPI()
+
 const authRegistry = ref<AuthRegistry>({
     name:'',
     email:'',
-    password:''
+    password:'',
+    password_confirmation:''
 })
 
 definePageMeta({
@@ -14,7 +16,9 @@ definePageMeta({
 });
 
 async function fetchRegistry(){
-    
+    if(!authRegistry.value.email || !authRegistry.value.name || !authRegistry.value.password || authRegistry.value.password!== authRegistry.value.password_confirmation) return alert('資料填寫有誤')
+   const r = await registry(authRegistry.value)
+   console.log(r)
 }
 </script>
 
@@ -31,12 +35,14 @@ async function fetchRegistry(){
                         <label for="authName" class="block text-900 text-xl font-medium mb-2">Name</label>
                         <InputText id="authName" v-model="authRegistry.name" type="text" placeholder="Auth name" class="w-full md:w-30rem mb-5" style="padding: 1rem" />
                         
-                        <label for="email1" class="block text-900 text-xl font-medium mb-2">Email</label>
-                        <InputText id="email1" v-model="authRegistry.email" type="text" placeholder="Email address" class="w-full md:w-30rem mb-5" style="padding: 1rem" />
+                        <label for="email" class="block text-900 text-xl font-medium mb-2">Email</label>
+                        <InputText id="email" v-model="authRegistry.email" type="text" placeholder="Email address" class="w-full md:w-30rem mb-5" style="padding: 1rem" />
 
-                        <label for="password1" class="block text-900 font-medium text-xl mb-2">Password</label>
-                        <Password id="password1" v-model="authRegistry.password" placeholder="Password" :toggleMask="true" class="w-full mb-3" inputClass="w-full" :inputStyle="{ padding: '1rem' }"></Password>
+                        <label for="password" class="block text-900 font-medium text-xl mb-2">Password</label>
+                        <Password id="password" v-model="authRegistry.password" placeholder="Password" :toggleMask="true" class="w-full mb-3" inputClass="w-full" :inputStyle="{ padding: '1rem' }"></Password>
 
+                        <label for="password_confirm" class="block text-900 font-medium text-xl mb-2">Password Confirm</label>
+                        <Password id="password_confirm" v-model="authRegistry.password_confirmation" placeholder="Password Confirm" :toggleMask="true" class="w-full mb-3" inputClass="w-full" :inputStyle="{ padding: '1rem' }"></Password>
                         <div class="flex align-items-center justify-content-between mb-5 gap-5">
                             <div class="flex align-items-center">
                                 <label for="rememberme1">已經有帳號了?</label>
@@ -50,7 +56,7 @@ async function fetchRegistry(){
         </div>
     </div>
 
-    <!-- <AppConfig simple /> -->
+    <AppConfig simple />
 </template>
 
 <style scoped>

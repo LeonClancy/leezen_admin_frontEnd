@@ -41,5 +41,28 @@ export default defineNuxtConfig({
             `
         }
     ],
-    css: ['primeicons/primeicons.css', 'primeflex/primeflex.scss', 'primevue/resources/primevue.min.css', '@/assets/styles.scss']
+    css: ['primeicons/primeicons.css', 'primeflex/primeflex.scss', 'primevue/resources/primevue.min.css', '@/assets/styles.scss'],
+    runtimeConfig: {
+        public: {
+            apiBaseUrl: 'http://172.105.204.235/api'
+        }
+    },
+    vite: {
+        server: {
+            proxy: {
+                '/api': {
+                    target: 'http://172.105.204.235',
+                    changeOrigin: true
+                }
+            }
+        }
+    }
+    // nitro:{
+    //     devProxy:{
+    //         '/api':{
+    //             target:'http://172.105.204.235/api',
+    //             changeOrigin:true
+    //         }
+    //     }
+    // }
 });

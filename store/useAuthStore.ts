@@ -6,7 +6,7 @@ export const useAuthStore = defineStore("authStore", () => {
   // 初始状态
   const initState = {
     auth:{
-      isLogin:false,
+      isLogin:true,
       token:''
     },
   };
@@ -15,7 +15,7 @@ export const useAuthStore = defineStore("authStore", () => {
   const auth = ref<Auth>(initState.auth);
 
   //gatters
-  // const unStockInModels = computed(()=> auth.value.filter(model => model.status === ModelStatus.未入庫))
+  //寫法參考 const unStockInModels = computed(()=> auth.value.filter(model => model.status === ModelStatus.未入庫))
 
   //actions
   function setAuth(payload:Auth){
