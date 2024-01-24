@@ -2,7 +2,7 @@
     <div class="gride">
         <div class="col-12">
             <div class="card">
-                <h5>新增保管人</h5>
+                <h5>新增資產設備</h5>
                 <div class="col-12 flex justify-content-end">
                     <Button label="列印" class="p-button-outlined p-button-secondary mr-2 mb-2" />
                 </div>

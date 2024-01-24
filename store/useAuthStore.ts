@@ -6,7 +6,6 @@ export const useAuthStore = defineStore("authStore", () => {
   // 初始状态
   const initState = {
     auth:{
-      isLogin:true,
       token:''
     },
   };
@@ -17,6 +16,7 @@ export const useAuthStore = defineStore("authStore", () => {
   //actions
   function setAuth(payload:Auth){
     auth.value = payload
+    console.log('設置token')
   }
 
   return {

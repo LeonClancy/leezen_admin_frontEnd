@@ -16,8 +16,8 @@ export default defineNuxtConfig({
         }
     },
     modules: [
+        'nuxt-primevue',
         '@pinia/nuxt',
-        'nuxt-primevue'
     ],
     primevue: {
         options: { ripple: true },
@@ -47,22 +47,4 @@ export default defineNuxtConfig({
             apiBaseUrl: 'http://172.105.204.235/api'
         }
     },
-    vite: {
-        server: {
-            proxy: {
-                '/api': {
-                    target: 'http://172.105.204.235',
-                    changeOrigin: true
-                }
-            }
-        }
-    },
-    // nitro:{
-    //     devProxy:{
-    //         '/api':{
-    //             target:'http://172.105.204.235/api',
-    //             changeOrigin:true
-    //         }
-    //     }
-    // }
 });

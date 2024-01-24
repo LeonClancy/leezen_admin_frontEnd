@@ -1,4 +1,4 @@
-import { AuthLogin, AuthRegistry, AuthLoginRespon } from "@/types/auth" 
+import { AuthLogin, AuthRegistry, AuthLoginRespon, AuthRegistryRespon } from "@/types/auth" 
 import useApiBase from "./useApiBase"
 
 export default () => {
@@ -6,14 +6,14 @@ export default () => {
 
   //MyModel API
   async function login(payload: AuthLogin): Promise<AuthLoginRespon> {
-    const { data, error } = await fetchApiBase("/login", "post",payload,);
-    if (error.value) throw createError({ ...error.value, message: "資料異常" });
-    return data as unknown as AuthLoginRespon;
+    const { token, errors } = await fetchApiBase("/login", "post",payload,);
+    if (errors) throw createError({ ...errors, message: "登入失敗" });
+    return {token} as unknown as AuthLoginRespon;
   }
-  async function registry(payload: AuthRegistry): Promise<AuthRegistry> {
-    const { data, error } = await fetchApiBase("/register","post",payload);
-    if (error.value) throw createError({ ...error.value, message: "資料異常" });
-    return data.value as unknown as AuthRegistry;
+  async function registry(payload: AuthRegistry): Promise<AuthRegistryRespon> {
+    const { user, errors } = await fetchApiBase("/register","post",payload);
+    if (errors) throw createError({...errors,message: "資料異常" });
+    return user as unknown as AuthRegistryRespon;
   }
  
   return {

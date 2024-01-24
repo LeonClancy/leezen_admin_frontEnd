@@ -1,5 +1,4 @@
 export declare interface Auth {
-    isLogin:boolean,
     token:string | undefined
 }
 export interface AuthLogin{
@@ -14,4 +13,11 @@ export interface AuthRegistry{
     email:string,
     password:string,
     password_confirmation:string
+}
+export interface AuthRegistryRespon{
+    name:string,
+    email:string,
+    updated_at:string,
+    created_at:string,
+    id:string
 }

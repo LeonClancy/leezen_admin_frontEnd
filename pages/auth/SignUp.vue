@@ -17,8 +17,11 @@ definePageMeta({
 
 async function fetchRegistry(){
     if(!authRegistry.value.email || !authRegistry.value.name || !authRegistry.value.password || authRegistry.value.password!== authRegistry.value.password_confirmation) return alert('資料填寫有誤')
-   const r = await registry(authRegistry.value)
-   console.log(r)
+    const user = await registry(authRegistry.value)
+    if(user){
+        console.log(user)
+        navigateTo('/auth/login')
+    }
 }
 </script>
 
@@ -49,7 +52,7 @@ async function fetchRegistry(){
                             </div>
                             <NuxtLink to="/auth/Login">去登入</NuxtLink>
                         </div>
-                        <Button label="註冊" class="w-full p-3 text-xl" @click="fetchRegistry"></Button>
+                        <Button type="submit" label="註冊" class="w-full p-3 text-xl" @click="fetchRegistry"></Button>
                     </div>
                 </div>
             </div>
