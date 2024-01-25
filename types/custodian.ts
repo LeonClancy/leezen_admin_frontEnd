@@ -10,8 +10,3 @@ export enum Position{
     '科長',
     '課長'
 }
-export enum Department{
-    '康樂部',
-    '司法部',
-    '風紀部',
-}

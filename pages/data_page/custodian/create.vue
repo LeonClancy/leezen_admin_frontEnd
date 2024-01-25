@@ -77,7 +77,8 @@
 </template>
 
 <script setup lang="ts">
-import { Position, Department} from "@/types/custodian"
+import { Position} from "@/types/custodian"
+import { DepartmentEnum } from "@/types/department"
 const positionItem = ref({name:'部長', code:0});
 const positionItems = ref([
     { name: '部長', code: Position.部長 },
@@ -89,11 +90,11 @@ const departmentGroupIdItems = ref([
     { name:'011', code:'011' },
     { name: '012', code: '012' },
 ]);
-const departmentItem = ref({name:'康樂部', code:Department.康樂部});
+const departmentItem = ref({name:'康樂部', code:DepartmentEnum.康樂部});
 const departmentItems = ref([
-    { name:'康樂部', code:Department.康樂部 },
-    { name: '司法部', code: Department.司法部 },
-    { name: '風紀部', code: Department.風紀部 }
+    { name:'康樂部', code:DepartmentEnum.康樂部 },
+    { name: '司法部', code: DepartmentEnum.司法部 },
+    { name: '風紀部', code: DepartmentEnum.風紀部 }
 ]);
 
 async function confirm(){

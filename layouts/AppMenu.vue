@@ -17,6 +17,11 @@ const model = ref([
                         label:'保管人基本資料',
                         icon:'pi pi-circle-fill',
                         to:'/data_page/custodian'
+                    },
+                    {
+                        label:'部門群組',
+                        icon:'pi pi-circle-fill',
+                        to:'/data_page/department_group'
                     }
                 ]
             }
