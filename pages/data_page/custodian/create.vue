@@ -2,8 +2,10 @@
 import { Position } from "@/types/custodian"
 import { ref } from "vue";
 import { CustodianService } from "~/service/CustodianService";
+import DepartmentService from "~/service/DepartmentService";
 
 const service = new CustodianService()
+const departmentService = new DepartmentService()
 
 let custodian = ref({
     code: '',
@@ -15,7 +17,9 @@ let custodian = ref({
     mobile_number: '',
     address: '',
     remarks: '',
+    department: '',
 });
+let departments = ref([]);
 
 const positionItem = ref({name:'部長', code:0});
 const positionItems = ref([
@@ -37,8 +41,15 @@ function submitCustodian() {
     })
 }
 
-onMounted(() => {
+function loadDepartments() {
+    departmentService.getDepartmentList().then((data) => {
+        console.log(data);
+        departments.value = data.departments;
+    })
+}
 
+onMounted(() => {
+    loadDepartments();
 })
 
 </script>
@@ -79,10 +90,9 @@ onMounted(() => {
                     </div>
                 </div>
                 <div class="col-12 flex flex-column md:flex-row">
-                    <div class="field col-12 md:col-3">
+                    <div class="field col-4 md:col-3">
                         <label class="block" for="department">部門群組</label>
-                        <Dropdown disabled id="departmentGroupId" v-model="departmentGroupIdItem" :options="departmentGroupIdItems" optionLabel="name" placeholder="Select One"></Dropdown>
-                        <Dropdown disabled id="department" v-model="departmentItem" :options="departmentItems" optionLabel="name" placeholder="Select One"></Dropdown>
+                        <Dropdown id="department" v-model="custodian.department" :options="departments" optionLabel="name" optionValue="id"></Dropdown>
                     </div>
                     <div class="field col-12 md:col-3">
                         <label class="block" for="state">職務名稱</label>
