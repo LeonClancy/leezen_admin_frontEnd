@@ -12,7 +12,14 @@
         <TreeTable :value="departmentList" :loading="loading">
           <Column field="id" header="部門代號"></Column>
           <Column field="name" header="部門名稱" expander="true"></Column>
-          <Column field="" header="操作"></Column>
+          <Column headerStyle="width: 10rem" header="操作">
+                <template #body="slotProps">
+                    <div class="flex flex-wrap gap-2">
+                        <Button @click="viewInfo(slotProps.node.data.id)" type="button" icon="pi pi-search" rounded/>
+                        <Button @click="editData(slotProps.node.data.id)" type="button" icon="pi pi-pencil" rounded severity="success" />
+                    </div>
+                </template>
+            </Column>
         </TreeTable>
       </div>
     </div>
@@ -112,9 +119,15 @@ onMounted(() => {
 })
 
 function viewInfo(id: string) {
+  console.log(id)
   setCurrentDepartmentId(id)
   navigateTo(`department_group/${id}`)
 }
+function editData(id: string) {
+  setCurrentDepartmentId(id)
+  navigateTo(`department_group/${id}`)
+}
+
 function deleteData(id: string) {
   console.log(id)
 }
