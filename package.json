@@ -18,6 +18,7 @@
         "@typescript-eslint/eslint-plugin": "^6.19.0",
         "@typescript-eslint/parser": "^6.19.0",
         "chart.js": "3.3.2",
+        "pinia": "^2.1.7",
         "primeflex": "^3.3.0",
         "primeicons": "^6.0.1",
         "primevue": "^3.39.0"

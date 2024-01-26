@@ -44,7 +44,7 @@ export default defineNuxtConfig({
     css: ['primeicons/primeicons.css', 'primeflex/primeflex.scss', 'primevue/resources/primevue.min.css', '@/assets/styles.scss'],
     runtimeConfig: {
         public: {
-            apiBaseUrl: 'http://172.105.204.235/api'
+            apiBaseUrl: 'http://127.0.0.1/api'
         }
     },
 });

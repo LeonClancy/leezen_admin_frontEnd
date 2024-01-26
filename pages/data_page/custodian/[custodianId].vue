@@ -1,3 +1,11 @@
+<script setup lang="ts">
+import { useCustodianStore } from "@/store/useCustodianStore"
+import { CustodianService } from "~/service/CustodianService";
+const route = useRoute()
+const { custodiantId } = route.params
+const { custodian } = storeToRefs(useCustodianStore())
+</script>
+
 <template>
   <div class="grid">
     <div class="col-12">
@@ -13,14 +21,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { useCustodianStore } from "@/store/useCustodianStore"
-const route = useRoute()
-const { custodiantId } = route.params
-const { custodian } = storeToRefs(useCustodianStore())
-
-</script>
 
 <style scoped lang="scss">
 :deep(.p-datatable-frozen-tbody) {

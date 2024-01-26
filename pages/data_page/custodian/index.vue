@@ -1,3 +1,31 @@
+<script setup lang="ts">
+import { useCustodianStore } from "@/store/useCustodianStore"
+import { CustodianService } from "~/service/CustodianService";
+const { custodianList } = storeToRefs(useCustodianStore())
+const { setCustodianList, setCurrentCustodianId } = useCustodianStore()
+
+const service = new CustodianService()
+
+const loading = ref(true)
+onMounted(() => {
+  service.getCustodians().then((data) => {
+    loading.value = false
+    console.log(data);
+    
+    custodianList.value = data.custodians
+  })
+})
+
+function viewInfo(id: string) {
+  setCurrentCustodianId(id)
+  navigateTo(`custodian/${id}`)
+}
+function deleteData(id: string) {
+  console.log(id)
+}
+
+</script>
+
 <template>
   <div class="grid">
     <div class="col-12">
@@ -12,7 +40,7 @@
         <DataTable :loading="loading" :value="custodianList" paginator showGridlines :rows="10" dataKey="id">
           <Column field="index" header="編號" style="min-width: 12rem">
             <template #body="{ data }">
-              {{ data.index }}
+              {{ data.code }}
             </template>
           </Column>
           <Column field="custodian_id" header="保管人代號" style="min-width: 12rem">
@@ -27,7 +55,7 @@
           </Column>
           <Column field="custodian_phone" header="連絡電話" style="min-width: 12rem">
             <template #body="{ data }">
-              {{ data.phone_number }}
+              {{ data.contact_number }}
             </template>
           </Column>
           <Column field="custodian_mobile" header="行動電話" style="min-width: 12rem">
@@ -53,46 +81,6 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { useCustodianStore } from "@/store/useCustodianStore"
-const { custodianList } = storeToRefs(useCustodianStore())
-const { setCustodianList, setCurrentCustodianId } = useCustodianStore()
-
-const loading = ref(true)
-onMounted(() => {
-  //模擬取得資料
-  setTimeout(() => {
-    setCustodianList([
-      //假資料
-      {
-        id: '001',
-        name: 'Jamy',
-        phone_number: '04-29895578',
-        mobile_number: '0956789456',
-        email: 'gg@gmail.com'
-      },
-      {
-        id: '002',
-        name: '王世傑',
-        phone_number: '04-29895578',
-        mobile_number: '0956789456',
-        email: 'jj@gmail.com'
-      },
-    ])
-    loading.value = false
-  }, 500)
-})
-
-function viewInfo(id: string) {
-  setCurrentCustodianId(id)
-  navigateTo(`custodian/${id}`)
-}
-function deleteData(id: string) {
-  console.log(id)
-}
-
-
-</script>
 <style scoped lang="scss">
 :deep(.p-datatable-frozen-tbody) {
   font-weight: bold;
