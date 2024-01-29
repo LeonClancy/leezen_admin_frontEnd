@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { object, string } from 'yup';
 import { useDepartmentStore } from "@/store/useDepartmentStore"
 import DepartmentService from "~/service/DepartmentService";
 import { useToast } from "primevue/usetoast";
@@ -18,6 +19,16 @@ let newDepartment = ref({
   parentDepartment: null,
 })
 
+//validate 
+const { defineField, values, errors, meta } = useForm({
+  initialValues: newDepartment.value,
+  validationSchema: object({
+    name: string().required(),
+    code: string().required()
+  }),
+})
+const [name, nameAttrs] = defineField('name')
+const [code, codeAttrs] = defineField('code')
 
 onMounted(() => {
   loadDepartments()
@@ -63,25 +74,10 @@ function loadDepartments() {
   })
 }
 
-function viewInfo(id: string) {
-  console.log(id)
-  setCurrentDepartmentId(id)
-  navigateTo(`department_group/${id}`)
-}
-function editData(id: string) {
-  setCurrentDepartmentId(id)
-  navigateTo(`department_group/${id}`)
-}
-
 function addDepartment(parentDepartment = null) {
   isAddDepartmentDialogVisble.value = true
   newDepartment.value.parentDepartment = parentDepartment
   console.log(newDepartment.value);
-
-}
-
-function deleteData(id: string) {
-  console.log(id)
 }
 
 function cancelNewDepartment() {
@@ -95,9 +91,10 @@ function cancelNewDepartment() {
 
 function submitDepartment() {
   console.log(newDepartment.value)
+  if(!meta.value.valid) return console.log(errors.value)
   service.createDepartment({
-    name: newDepartment.value.name,
-    code: newDepartment.value.code,
+    name: name.value,
+    code: code.value,
     parent_id: newDepartment.value.parentDepartment?.id,
   }).then((data) => {
     console.log(data)
@@ -119,7 +116,6 @@ function submitDepartment() {
 
 </script>
 
-
 <template>
   <div class="grid">
     <div class="col-12">
@@ -133,31 +129,41 @@ function submitDepartment() {
           <Column field="code" header="部門代號"></Column>
           <Column field="name" header="部門名稱" expander="true"></Column>
           <Column headerStyle="width: 10rem" header="操作">
-                <template #body="slotProps">
-                    <div class="flex flex-wrap gap-2">
-                        <Button @click="addDepartment(slotProps.node.data)" type="button" icon="pi pi-plus" rounded v-if="slotProps.node.data.depth < 2"/>
-                        <!-- <Button @click="editData(slotProps.node.data.id)" type="button" icon="pi pi-pencil" rounded severity="success" /> -->
-                    </div>
-                </template>
-            </Column>
+            <template #body="slotProps">
+              <div class="flex flex-wrap gap-2">
+                <Button @click="addDepartment(slotProps.node.data)" type="button" icon="pi pi-plus" rounded
+                  v-if="slotProps.node.data.depth < 2" />
+                <!-- <Button @click="editData(slotProps.node.data.id)" type="button" icon="pi pi-pencil" rounded severity="success" /> -->
+              </div>
+            </template>
+          </Column>
         </TreeTable>
       </div>
     </div>
   </div>
   <Dialog v-bind:visible="isAddDepartmentDialogVisble" modal>
     <span class="p-text-secondary block mb-5" v-if="newDepartment.parentDepartment == null">新增部門</span>
-    <span class="p-text-secondary block mb-5" v-else>新增 {{ newDepartment.parentDepartment.name }} ({{ newDepartment.parentDepartment.code }}) 的子部門</span>
+    <span class="p-text-secondary block mb-5" v-else>新增 {{ newDepartment.parentDepartment.name }} ({{
+      newDepartment.parentDepartment.code }}) 的子部門</span>
     <div class="flex align-items-center gap-3 mb-3">
-        <label for="username" class="font-semibold w-6rem">部門代號</label>
-        <InputText id="username" class="flex-auto" autocomplete="off" v-model="newDepartment.code" />
+      <label for="username" class="font-semibold w-6rem">部門代號</label>
+      <div>
+        <InputText id="username" class="flex-auto" :class="[errors.code ? 'p-invalid' : '']" autocomplete="off" v-model="code"
+          v-bind="codeAttrs" />
+        <p>{{ errors.code }}</p>
+      </div>
     </div>
     <div class="flex align-items-center gap-3 mb-5">
-        <label for="email" class="font-semibold w-6rem">部門名稱</label>
-        <InputText id="Email" class="flex-auto" autocomplete="off" v-model="newDepartment.name" />
+      <label for="email" class="font-semibold w-6rem">部門名稱</label>
+      <div>
+        <InputText id="Email" class="flex-auto" :class="[errors.name ? 'p-invalid' : '']" autocomplete="off" v-model="name"
+          v-bind="nameAttrs" />
+          <p>{{ errors.name }}</p>
+      </div>
     </div>
     <div class="flex justify-content-end gap-2">
-        <Button type="button" label="Cancel" severity="secondary" @click="cancelNewDepartment()"></Button>
-        <Button type="button" label="Save" @click="submitDepartment()"></Button>
+      <Button type="button" label="Cancel" severity="secondary" @click="cancelNewDepartment()"></Button>
+      <Button type="button" label="Save" @click="submitDepartment()" :disabled="!meta.valid"></Button>
     </div>
   </Dialog>
   <Toast></Toast>
@@ -170,5 +176,4 @@ function submitDepartment() {
 
 :deep(.p-datatable-scrollable .p-frozen-column) {
   font-weight: bold;
-}
-</style>
+}</style>
