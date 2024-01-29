@@ -150,7 +150,7 @@ function submitDepartment() {
       <div>
         <InputText id="username" class="flex-auto" :class="[errors.code ? 'p-invalid' : '']" autocomplete="off" v-model="code"
           v-bind="codeAttrs" />
-        <p>{{ errors.code }}</p>
+        <p>{{ errors.code? '請填寫代號':''}}</p>
       </div>
     </div>
     <div class="flex align-items-center gap-3 mb-5">
@@ -158,7 +158,7 @@ function submitDepartment() {
       <div>
         <InputText id="Email" class="flex-auto" :class="[errors.name ? 'p-invalid' : '']" autocomplete="off" v-model="name"
           v-bind="nameAttrs" />
-          <p>{{ errors.name }}</p>
+          <p>{{ errors.name? '請填寫名稱欄位':'' }}</p>
       </div>
     </div>
     <div class="flex justify-content-end gap-2">
