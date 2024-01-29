@@ -13,15 +13,10 @@ const service = new DepartmentService()
 let departments = ref([])
 
 let isAddDepartmentDialogVisble = ref(false)
-let newDepartment = ref({
-  name: '',
-  code: '',
-  parentDepartment: null,
-})
+let newDepartmentParent = ref(null)
 
 //validate 
-const { defineField, values, errors, meta } = useForm({
-  initialValues: newDepartment.value,
+const { defineField, values, errors, meta, resetForm, setFieldError } = useForm({
   validationSchema: object({
     name: string().required(),
     code: string().required()
@@ -76,35 +71,33 @@ function loadDepartments() {
 
 function addDepartment(parentDepartment = null) {
   isAddDepartmentDialogVisble.value = true
-  newDepartment.value.parentDepartment = parentDepartment
-  console.log(newDepartment.value);
+  newDepartmentParent.value = parentDepartment
+  console.log(newDepartmentParent.value);
 }
 
 function cancelNewDepartment() {
   isAddDepartmentDialogVisble.value = false
-  newDepartment.value = {
-    name: '',
-    code: '',
-    parentDepartment: null,
-  }
+  newDepartmentParent.value = null
 }
 
 function submitDepartment() {
-  console.log(newDepartment.value)
+  console.log(newDepartmentParent.value)
   if(!meta.value.valid) return console.log(errors.value)
   service.createDepartment({
-    name: name.value,
-    code: code.value,
-    parent_id: newDepartment.value.parentDepartment?.id,
+    name: values.name,
+    code: values.code,
+    parent_id: newDepartmentParent.value.id,
   }).then((data) => {
     console.log(data)
     loadDepartments()
     isAddDepartmentDialogVisble.value = false
-    newDepartment.value = {
-      name: '',
-      code: '',
-      parentDepartment: null,
-    }
+    resetForm({
+      values:{
+        name:'',
+        code:''
+      }
+    })
+    newDepartmentParent.value = null
     toast.add({
       severity: 'success',
       summary: 'Success',
@@ -142,15 +135,15 @@ function submitDepartment() {
     </div>
   </div>
   <Dialog v-bind:visible="isAddDepartmentDialogVisble" modal>
-    <span class="p-text-secondary block mb-5" v-if="newDepartment.parentDepartment == null">新增部門</span>
-    <span class="p-text-secondary block mb-5" v-else>新增 {{ newDepartment.parentDepartment.name }} ({{
-      newDepartment.parentDepartment.code }}) 的子部門</span>
+    <span class="p-text-secondary block mb-5" v-if="newDepartmentParent.parentDepartment == null">新增部門</span>
+    <span class="p-text-secondary block mb-5" v-else>新增 {{ newDepartmentParent.parentDepartment.name }} ({{
+      newDepartmentParent.parentDepartment.code }}) 的子部門</span>
     <div class="flex align-items-center gap-3 mb-3">
       <label for="username" class="font-semibold w-6rem">部門代號</label>
       <div>
         <InputText id="username" class="flex-auto" :class="[errors.code ? 'p-invalid' : '']" autocomplete="off" v-model="code"
           v-bind="codeAttrs" />
-        <p>{{ errors.code? '請填寫代號':''}}</p>
+        <p>{{ errors.code ? '請填寫代號' : '' }}</p>
       </div>
     </div>
     <div class="flex align-items-center gap-3 mb-5">
@@ -158,7 +151,7 @@ function submitDepartment() {
       <div>
         <InputText id="Email" class="flex-auto" :class="[errors.name ? 'p-invalid' : '']" autocomplete="off" v-model="name"
           v-bind="nameAttrs" />
-          <p>{{ errors.name? '請填寫名稱欄位':'' }}</p>
+          <p>{{ errors.name ? '請填寫名稱':'' }}</p>
       </div>
     </div>
     <div class="flex justify-content-end gap-2">
