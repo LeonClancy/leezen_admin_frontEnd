@@ -84,8 +84,7 @@ function submitDepartment() {
   console.log(newDepartmentParent.value)
   if(!meta.value.valid) return console.log(errors.value)
   service.createDepartment({
-    name: values.name,
-    code: values.code,
+   ...values, 
     parent_id: newDepartmentParent.value.id,
   }).then((data) => {
     console.log(data)
