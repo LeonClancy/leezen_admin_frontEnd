@@ -15,10 +15,10 @@
 </template>
 
 <script setup lang="ts">
-import { useDepartmentStore } from "@/store/useDepartmentStore"
+// import { useDepartmentStore } from "@/store/useDepartmentStore"
 const route = useRoute()
 const { departmentId } = route.params
-const { department } = storeToRefs(useDepartmentStore())
+// const { department } = storeToRefs(useDepartmentStore())
 
 </script>
 

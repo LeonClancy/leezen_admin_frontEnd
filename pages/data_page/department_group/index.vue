@@ -1,22 +1,23 @@
 <script setup lang="ts">
 import { object, string } from 'yup';
 import { useDepartmentStore } from "@/store/useDepartmentStore"
-import DepartmentService from "~/service/DepartmentService";
+import useDepartmentAPI from "~/composables/api/useDepartmentAPI"
 import { useToast } from "primevue/usetoast";
+import { useConfirm } from "primevue/useconfirm";
+import { Department } from '~/types/department';
 
 const { departmentList } = storeToRefs(useDepartmentStore())
-const { setDepartmentList, setCurrentDepartmentId } = useDepartmentStore()
+const { setDepartmentList } = useDepartmentStore()
+const { getDepartments, deleteDepartment, createDepartment } = useDepartmentAPI()
 const loading = ref(true)
 const toast = useToast()
-
-const service = new DepartmentService()
-let departments = ref([])
+const confirm = useConfirm();
 
 let isAddDepartmentDialogVisble = ref(false)
 let newDepartmentParent = ref(null)
 
 //validate 
-const { defineField, values, errors, meta, resetForm, setFieldError } = useForm({
+const { defineField, values, errors, meta, resetForm } = useForm({
   validationSchema: object({
     name: string().required(),
     code: string().required()
@@ -29,44 +30,28 @@ onMounted(() => {
   loadDepartments()
 })
 
-function loadDepartments() {
-  service.getDepartments().then((data) => {
-    console.log(data)
-    data.departments.map((item) => {
-      item.key = item.code
-      item.data = {
-        id: item.id,
-        name: item.name,
-        code: item.code,
-        depth: item.depth,
-      }
-      if (item.children) {
-        item.children.map((child) => {
-          child.key = child.code
-          child.data = {
-            id: child.id,
-            name: child.name,
-            code: child.code,
-            depth: child.depth,
-          }
-          if (child.children) {
-            child.children.map((grandChild) => {
-              grandChild.key = grandChild.code
-              grandChild.data = {
-                id: grandChild.id,
-                name: grandChild.name,
-                code: grandChild.code,
-                depth: grandChild.depth,
-              }
-            })
-          }
-        })
-      }
-    })
-    console.log(data.departments);
-    departments.value = data.departments
-    loading.value = false
+async function loadDepartments() {
+  const departmentsData = await getDepartments()
+  departmentsData.forEach(department => {
+    loadDepartmentNodeRecursive(department)
   })
+  setDepartmentList(departmentsData)
+  loading.value = false
+}
+function loadDepartmentNodeRecursive(item: Department) { //遞迴的裝載child資料
+  loadDepartmentNodeData(item);
+  if (!item.children) return
+  item.children.forEach(department => loadDepartmentNodeRecursive(department))
+}
+
+function loadDepartmentNodeData(item: Department) {
+  item.key = item.code;
+  item.data = {
+    id: item.id,
+    name: item.name,
+    code: item.code,
+    depth: item.depth,
+  };
 }
 
 function addDepartment(parentDepartment = null) {
@@ -80,20 +65,20 @@ function cancelNewDepartment() {
   newDepartmentParent.value = null
 }
 
-function submitDepartment() {
+async function submitDepartment() {
   console.log(newDepartmentParent.value)
-  if(!meta.value.valid) return console.log(errors.value)
-  service.createDepartment({
-   ...values, 
-    parent_id: newDepartmentParent.value.id,
-  }).then((data) => {
-    console.log(data)
-    loadDepartments()
-    isAddDepartmentDialogVisble.value = false
+  if (!meta.value.valid) return console.log(errors.value)
+  await createDepartment({
+    name: values.name,
+    code: values.code,
+    parent_id: newDepartmentParent.value?.id
+  })
+  loadDepartments()
+  isAddDepartmentDialogVisble.value = false
     resetForm({
-      values:{
-        name:'',
-        code:''
+      values: {
+        name: '',
+        code: ''
       }
     })
     newDepartmentParent.value = null
@@ -103,6 +88,18 @@ function submitDepartment() {
       detail: '新增成功',
       life: 3000,
     })
+}
+async function deleteData(id: string) {
+  await deleteDepartment({ id })
+  loadDepartments()
+  toast.add({ severity: "info", summary: "刪除成功", detail: `您已刪除代號 : ${id}的相關資料`, life: 3000 })
+}
+function confirmDeleteData(id: string) {
+  confirm.require({
+    message: `確定要刪除代號為${id}的資料?`,
+    header: '重要提醒',
+    accept: () => deleteData(id),
+    reject: () => toast.add({ severity: "error", summary: "取消刪除", detail: `您已取消刪除代號為${id}操作`, life: 3000 })
   })
 }
 
@@ -117,7 +114,7 @@ function submitDepartment() {
           <Button label="新增" class="p-button-outlined p-button-secondary mr-2 mb-2" @click="addDepartment(null)" />
           <Button label="列印" class="p-button-outlined p-button-secondary mr-2 mb-2" />
         </div>
-        <TreeTable :value="departments" :loading="loading">
+        <TreeTable :value="departmentList" :loading="loading">
           <Column field="code" header="部門代號"></Column>
           <Column field="name" header="部門名稱" expander="true"></Column>
           <Column headerStyle="width: 10rem" header="操作">
@@ -125,6 +122,8 @@ function submitDepartment() {
               <div class="flex flex-wrap gap-2">
                 <Button @click="addDepartment(slotProps.node.data)" type="button" icon="pi pi-plus" rounded
                   v-if="slotProps.node.data.depth < 2" />
+                <Button @click="confirmDeleteData(slotProps.node.data.id)" icon="pi pi-minus"
+                  class="p-button-rounded p-button-danger mr-2 mb-2"></Button>
                 <!-- <Button @click="editData(slotProps.node.data.id)" type="button" icon="pi pi-pencil" rounded severity="success" /> -->
               </div>
             </template>
@@ -134,23 +133,23 @@ function submitDepartment() {
     </div>
   </div>
   <Dialog v-bind:visible="isAddDepartmentDialogVisble" modal>
-    <span class="p-text-secondary block mb-5" v-if="newDepartmentParent.parentDepartment == null">新增部門</span>
-    <span class="p-text-secondary block mb-5" v-else>新增 {{ newDepartmentParent.parentDepartment.name }} ({{
-      newDepartmentParent.parentDepartment.code }}) 的子部門</span>
+    <span class="p-text-secondary block mb-5" v-if="!newDepartmentParent">新增部門</span>
+    <span class="p-text-secondary block mb-5" v-else>新增 {{ newDepartmentParent.name }} ({{
+      newDepartmentParent.code }}) 的子部門</span>
     <div class="flex align-items-center gap-3 mb-3">
       <label for="username" class="font-semibold w-6rem">部門代號</label>
       <div>
-        <InputText id="username" class="flex-auto" :class="[errors.code ? 'p-invalid' : '']" autocomplete="off" v-model="code"
-          v-bind="codeAttrs" />
+        <InputText id="username" class="flex-auto" :class="[errors.code ? 'p-invalid' : '']" autocomplete="off"
+          v-model="code" v-bind="codeAttrs" />
         <p>{{ errors.code ? '請填寫代號' : '' }}</p>
       </div>
     </div>
     <div class="flex align-items-center gap-3 mb-5">
       <label for="email" class="font-semibold w-6rem">部門名稱</label>
       <div>
-        <InputText id="Email" class="flex-auto" :class="[errors.name ? 'p-invalid' : '']" autocomplete="off" v-model="name"
-          v-bind="nameAttrs" />
-          <p>{{ errors.name ? '請填寫名稱':'' }}</p>
+        <InputText id="Email" class="flex-auto" :class="[errors.name ? 'p-invalid' : '']" autocomplete="off"
+          v-model="name" v-bind="nameAttrs" />
+        <p>{{ errors.name ? '請填寫名稱' : '' }}</p>
       </div>
     </div>
     <div class="flex justify-content-end gap-2">
@@ -168,4 +167,5 @@ function submitDepartment() {
 
 :deep(.p-datatable-scrollable .p-frozen-column) {
   font-weight: bold;
-}</style>
+}
+</style>

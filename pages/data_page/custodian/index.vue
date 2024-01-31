@@ -86,8 +86,7 @@ async function deleteData(id: string) {
           <Column field="custodian_operation" header="操作" style="min-width: 12rem">
             <template #body="{ data }">
               <Button @click="viewInfo(data.id)" label="查看/編輯" class="p-button-rounded p-button-success mr-2 mb-2" />
-              <Button @click="confirmDeleteData(data.id)" label="刪除"
-                class="p-button-rounded p-button-danger mr-2 mb-2"></Button>
+              <Button @click="confirmDeleteData(data.id)" label="刪除" class="p-button-rounded p-button-danger mr-2 mb-2"></Button>
             </template>
           </Column>
         </DataTable>
