@@ -28,6 +28,7 @@ export const useCustodianStore = defineStore("custodianStore", () => {
     //data
     custodianList,
     custodian,
+    currentCustianId,
     //methods
     setCustodianList,
     setCurrentCustodianId

@@ -21,7 +21,7 @@ async function fetchCustodians() {
   setCustodianList(custodians);
 }
 
-function confirmDeleteData(id: string) {
+function confirmDeleteData(id: number) {
   confirm.require({
     message: `確定要刪除代號為${id}的資料?`,
     header: '重要提醒',
@@ -33,7 +33,7 @@ function viewInfo(id: string) {
   setCurrentCustodianId(id)
   navigateTo(`custodian/${id}`)
 }
-async function deleteData(id: string) {
+async function deleteData(id:number) {
   const deleteCustodianData = await deleteCustodian({ id })
   const newList = custodianList.value.filter(custodiant => custodiant.id !== deleteCustodianData.id)
   setCustodianList(newList)

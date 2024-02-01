@@ -10,8 +10,18 @@ export default () => {
     if (errors) throw createError({ ...errors, message: "登入失敗" });
     return departments as unknown as Department[]; 
   }
+  async function getDepartment(id:string){
+   const {department ,errors } = await fetchApiBase(`/departments/${id}`,"get");
+    if (errors) throw createError({ ...errors, message: "登入失敗" });
+    return department as unknown as Department; 
+  }
   async function createDepartment(payload:DepartmentCreateRequest){
    const {department ,errors } = await fetchApiBase(`/departments`,"post",payload);
+    if (errors) throw createError({ ...errors, message: "登入失敗" });
+    return department as unknown as Department; 
+  }
+   async function updateDepartment(payload:DepartmentCreateRequest){
+   const {department ,errors } = await fetchApiBase(`/departments`,"patch",payload);
     if (errors) throw createError({ ...errors, message: "登入失敗" });
     return department as unknown as Department; 
   }
@@ -25,7 +35,9 @@ export default () => {
     //data
     //methods
     getDepartments,
+    getDepartment,
     createDepartment,
+    updateDepartment,
     deleteDepartment
   }
 };
