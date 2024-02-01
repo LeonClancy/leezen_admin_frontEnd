@@ -6,7 +6,7 @@ import useCustodianAPI from '~/composables/api/useCustodianAPI';
 import { useToast } from 'primevue/usetoast';
 
 const { custodian,currentCustianId  } = storeToRefs(useCustodianStore())
-const { getCustodian, updateCustodian } = useCustodianAPI()
+const { updateCustodian } = useCustodianAPI()
 const toast = useToast()
 //validate 
 const { defineField, errors, meta, values, setValues } = useForm({
@@ -40,10 +40,9 @@ onMounted(()=>{
 })
 //初始化
 async function init(){
-  await fetchCustodianData() 
+  await initCustodianInputData() 
 }
-async function fetchCustodianData(){
-  // const custodian = await getCustodian(currentCustianId.value)
+async function initCustodianInputData(){
   setValues({
     code:custodian.value.code,
     name:custodian.value.name,

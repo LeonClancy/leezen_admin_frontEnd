@@ -1,4 +1,4 @@
-import { type DepartmentDeleteRequest, type DepartmentCreateRequest, type Department } from "@/types/department" 
+import { type DepartmentDeleteRequest, type DepartmentCreateRequest, type DepartmentUpdateRequest,type Department } from "@/types/department" 
 import useApiBase from "./useApiBase"
 
 export default () => {
@@ -10,7 +10,7 @@ export default () => {
     if (errors) throw createError({ ...errors, message: "登入失敗" });
     return departments as unknown as Department[]; 
   }
-  async function getDepartment(id:string){
+  async function getDepartment(id:string | number){
    const {department ,errors } = await fetchApiBase(`/departments/${id}`,"get");
     if (errors) throw createError({ ...errors, message: "登入失敗" });
     return department as unknown as Department; 
@@ -20,8 +20,8 @@ export default () => {
     if (errors) throw createError({ ...errors, message: "登入失敗" });
     return department as unknown as Department; 
   }
-   async function updateDepartment(payload:DepartmentCreateRequest){
-   const {department ,errors } = await fetchApiBase(`/departments`,"patch",payload);
+   async function updateDepartment(payload:DepartmentUpdateRequest){
+   const {department ,errors } = await fetchApiBase(`/departments/${payload.id}`,"put",payload);
     if (errors) throw createError({ ...errors, message: "登入失敗" });
     return department as unknown as Department; 
   }

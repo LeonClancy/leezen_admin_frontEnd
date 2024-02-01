@@ -28,3 +28,8 @@ export declare interface DepartmentCreateRequest{
     code:string,
     parent_id:number | null
 }
+export declare interface DepartmentUpdateRequest{
+    id:string | number,
+    name:string,
+    code:string,
+}

@@ -7,7 +7,7 @@ import { useConfirm } from "primevue/useconfirm";
 import { Department } from '~/types/department';
 
 const { departmentList } = storeToRefs(useDepartmentStore())
-const { setDepartmentList } = useDepartmentStore()
+const { setDepartmentList, setCurrentDepartment } = useDepartmentStore()
 const { getDepartments, deleteDepartment, createDepartment } = useDepartmentAPI()
 const loading = ref(true)
 const toast = useToast()
@@ -102,6 +102,10 @@ function confirmDeleteData(id: string) {
     reject: () => toast.add({ severity: "error", summary: "取消刪除", detail: `您已取消刪除代號為${id}操作`, life: 3000 })
   })
 }
+function viewData(department:Department){
+  setCurrentDepartment(department)
+  navigateTo(`department_group/${department.id}`)
+}
 
 </script>
 
@@ -120,6 +124,7 @@ function confirmDeleteData(id: string) {
           <Column headerStyle="width: 10rem" header="操作">
             <template #body="slotProps">
               <div class="flex flex-wrap gap-2">
+                <Button @click="viewData(slotProps.node.data)" severity="secondary" type="button" label="編輯/查看" rounded />
                 <Button @click="addDepartment(slotProps.node.data)" type="button" icon="pi pi-plus" rounded
                   v-if="slotProps.node.data.depth < 2" />
                 <Button @click="confirmDeleteData(slotProps.node.data.id)" icon="pi pi-minus"

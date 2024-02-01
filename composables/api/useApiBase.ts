@@ -1,7 +1,7 @@
 export default () => {
   const { apiBaseUrl } = useRuntimeConfig().public
 
-  async function fetchApiBase(url:string, method:'post' | 'get' | 'delete' | 'patch',body?: any): Promise<any> {
+  async function fetchApiBase(url:string, method:'post' | 'get' | 'delete' | 'patch' | 'put',body?: any): Promise<any> {
     const { data, error } = await useFetch(url, {
       baseURL:apiBaseUrl,
       method,
