@@ -4,10 +4,12 @@ import { Position } from "@/types/custodian"
 import { ref } from "vue";
 import { CustodianService } from "~/service/CustodianService";
 import DepartmentService from "~/service/DepartmentService";
+import { useToast } from 'primevue/usetoast';
 
 const service = new CustodianService()
 const departmentService = new DepartmentService()
 let departments = ref([]);
+const toast = useToast();
 
 const positionItems = ref([
     { name: '部長', code: Position.部長 },
@@ -25,7 +27,7 @@ const { defineField, errors, meta, values } = useForm({
     contact_number:string().required(),
     mobile_number:string().required(),
     address:string().required(),
-    department:string().required(),
+    department_id:string().required(),
     remarks:string(),
     // position:string().required()
   }),
@@ -38,23 +40,28 @@ const [birthday, birthdayAttrs] = defineField('birthday')
 const [contact_number, contact_numberAttrs] = defineField('contact_number')
 const [mobile_number, mobile_numberAttrs] = defineField('mobile_number')
 const [address, addressAttrs] = defineField('address')
-const [department, departmentAttrs] = defineField('department')
+const [department_id, departmentAttrs] = defineField('department_id')
 const [remarks, remarksAttrs] = defineField('remarks')
-const [position, positionAttrs] = defineField('position')
+// const [position, positionAttrs] = defineField('position')
 
 function submitCustodian() {
     console.log(values)
     if(!meta.value.valid) return console.log(errors.value)
     service.createCustodian(values).then((data) => {
+        if (data.errors) {
+            console.log(data.errors);
+            toast.add({ severity: 'error', summary: '新增失敗', detail: data.errors, life: 3000});
+            return;
+        }
         console.log(data);
         navigateTo('/data_page/custodian');
     })
 }
 
 function loadDepartments() {
-    departmentService.getDepartmentList().then((data) => {
+    departmentService.getDepartmentsOptions().then((data) => {
         console.log(data);
-        departments.value = data.departments;
+        departments.value = data;
     })
 }
 
@@ -118,18 +125,11 @@ onMounted(() => {
                     </div>
                 </div>
                 <div class="col-12 flex flex-column md:flex-row">
-                    <div class="field col-4 md:col-3">
+                    <div class="field col">
                         <label class="block" for="department">部門群組</label>
                         <div>
-                            <Dropdown id="department" :class="[errors.department ? 'p-invalid' : '']" v-model="department" v-bind="departmentAttrs" :options="departments" optionLabel="name" optionValue="id"></Dropdown>
+                            <Dropdown id="department" :class="[errors.department ? 'p-invalid' : '']" v-model="department_id" v-bind="departmentAttrs" :options="departments" optionLabel="name" optionValue="id"></Dropdown>
                             <p>{{ errors.department ? '請選擇所屬的部門群組' : '' }}</p>
-                        </div>
-                    </div>
-                    <div class="field col-12 md:col-3">
-                        <label class="block" for="state">職務名稱</label>
-                        <div>
-                            <Dropdown disabled id="state" :class="[errors.position ? 'p-invalid' : '']" v-model="position" v-bind="positionAttrs" :options="positionItems" optionLabel="name" placeholder="Select One"></Dropdown>
-                            <p>{{ errors.position ? '請選擇職務名稱' : '' }}</p>
                         </div>
                     </div>
                 </div>

@@ -23,4 +23,9 @@ export default class DepartmentService {
         })
         return await response.json()
     }
+
+    async getDepartmentsOptions() {
+        const response = await fetch(`${this.apiBaseUrl}/departments/type/options`)
+        return await response.json()
+    }
 }
