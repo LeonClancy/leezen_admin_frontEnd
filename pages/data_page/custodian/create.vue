@@ -2,7 +2,7 @@
 import { object, string, date } from 'yup';
 import { Position } from "@/types/custodian"
 import { ref } from "vue";
-import { CustodianService } from "~/service/CustodianService";
+import CustodianService from "~/service/CustodianService";
 import DepartmentService from "~/service/DepartmentService";
 import { useToast } from 'primevue/usetoast';
 
