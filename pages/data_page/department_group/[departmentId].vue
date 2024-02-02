@@ -23,7 +23,7 @@
           </div>
         </div>
         <div class="col-12 flex justify-content-end">
-          <Button label="修改" class="mr-2 mb-2" @click="fetchUpdateCustodianData"></Button>
+          <Button :disabled="!meta.valid" label="修改" class="mr-2 mb-2" @click="fetchUpdateCustodianData"></Button>
           <NuxtLink to="/data_page/department_group">
             <Button label="取消" class="p-button-outlined p-button-secondary mr-2 mb-2" />
           </NuxtLink>
@@ -59,6 +59,7 @@ async function initDepartmentInputData() {
   })
 }
 async function fetchUpdateCustodianData() {
+  if(!meta.value.valid) return
   await updateDepartment({
     id:currentDepartment.value.id,
     code,

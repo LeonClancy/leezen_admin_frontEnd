@@ -56,6 +56,7 @@ async function initCustodianInputData(){
   })
 }
 async function fetchUpdateCustodianData(){
+  if(!meta.value.valid) return
   await updateCustodian({
     id:currentCustianId.value,
     code,
