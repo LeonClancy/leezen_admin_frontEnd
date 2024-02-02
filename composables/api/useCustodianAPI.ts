@@ -6,23 +6,19 @@ export default () => {
 
   //MyModel API
   async function getCustodians(){
-   const {custodians ,errors } = await fetchApiBase(`/custodians`,"get");
-    if (errors) throw createError({ ...errors, message: "登入失敗" });
+   const {custodians } = await fetchApiBase(`/custodians`,"get");
     return custodians as unknown as Custodian[]; 
   }
   async function getCustodian(id:string){
-   const {custodian ,errors } = await fetchApiBase(`/custodians/${id}`,"get");
-    if (errors) throw createError({ ...errors, message: "登入失敗" });
+   const {custodian } = await fetchApiBase(`/custodians/${id}`,"get");
     return custodian as unknown as Custodian; 
   }
   async function updateCustodian(payload: CustodianUpdateRequest){
-    const {custodian ,errors } = await fetchApiBase(`/custodians/${payload.id}`,"patch",payload);
-    if (errors) throw createError({ ...errors, message: "登入失敗" });
+    const {custodian } = await fetchApiBase(`/custodians/${payload.id}`,"patch",payload);
     return custodian as unknown as Custodian;
   }
   async function deleteCustodian(payload: CustodianDeleteRequest) {
-    const {custodian ,errors } = await fetchApiBase(`/custodians/${payload.id}`,"delete");
-    if (errors) throw createError({ ...errors, message: "登入失敗" });
+    const {custodian } = await fetchApiBase(`/custodians/${payload.id}`,"delete");
     return custodian as unknown as Custodian;
   }
  

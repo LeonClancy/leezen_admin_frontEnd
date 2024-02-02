@@ -6,13 +6,11 @@ export default () => {
 
   //MyModel API
   async function login(payload: AuthLogin): Promise<AuthLoginRespon> {
-    const { token, errors } = await fetchApiBase("/login", "post",payload,);
-    if (errors) throw createError({ ...errors, message: "登入失敗" });
+    const { token} = await fetchApiBase("/login", "post",payload,);
     return {token} as unknown as AuthLoginRespon;
   }
   async function registry(payload: AuthRegistry): Promise<AuthRegistryRespon> {
-    const { user, errors } = await fetchApiBase("/register","post",payload);
-    if (errors) throw createError({...errors,message: "資料異常" });
+    const { user} = await fetchApiBase("/register","post",payload);
     return user as unknown as AuthRegistryRespon;
   }
  

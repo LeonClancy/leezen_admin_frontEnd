@@ -6,28 +6,23 @@ export default () => {
 
   //MyModel API
   async function getDepartments(){
-   const {departments ,errors } = await fetchApiBase(`/departments`,"get");
-    if (errors) throw createError({ ...errors, message: "登入失敗" });
+   const {departments } = await fetchApiBase(`/departments`,"get");
     return departments as unknown as Department[]; 
   }
   async function getDepartment(id:string | number){
-   const {department ,errors } = await fetchApiBase(`/departments/${id}`,"get");
-    if (errors) throw createError({ ...errors, message: "登入失敗" });
+   const {department } = await fetchApiBase(`/departments/${id}`,"get");
     return department as unknown as Department; 
   }
   async function createDepartment(payload:DepartmentCreateRequest){
-   const {department ,errors } = await fetchApiBase(`/departments`,"post",payload);
-    if (errors) throw createError({ ...errors, message: "登入失敗" });
+   const {department } = await fetchApiBase(`/departments`,"post",payload);
     return department as unknown as Department; 
   }
    async function updateDepartment(payload:DepartmentUpdateRequest){
-   const {department ,errors } = await fetchApiBase(`/departments/${payload.id}`,"put",payload);
-    if (errors) throw createError({ ...errors, message: "登入失敗" });
+   const {department } = await fetchApiBase(`/departments/${payload.id}`,"put",payload);
     return department as unknown as Department; 
   }
   async function deleteDepartment(payload: DepartmentDeleteRequest){
-    const {department ,errors } = await fetchApiBase(`/departments/${payload.id}`,"delete");
-    if (errors) throw createError({ ...errors, message: "登入失敗" });
+    const {department } = await fetchApiBase(`/departments/${payload.id}`,"delete");
     return department as unknown as Department;
   }
  
