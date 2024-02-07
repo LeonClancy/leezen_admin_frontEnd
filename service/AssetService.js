@@ -21,7 +21,13 @@ export default class AssetService {
     }
 
     async getAsset(assetId) {
-        const response = await fetch(`${this.apiBaseUrl}/assets/${assetId}`)
+        const response = await fetch(`${this.apiBaseUrl}/assets/${assetId}`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
+        })
         return await response.json()
     }
 

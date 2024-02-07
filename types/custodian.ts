@@ -11,6 +11,7 @@ export declare interface Custodian {
     address: string;
     created_at: string;
     updated_at: string;
+    department_id: string | number;
 }
 export declare interface CustodianUpdateRequest {
     id: string | number;

@@ -2,8 +2,17 @@
 import AssetService from '~/service/AssetService';
 import { ref } from 'vue';
 import { useToast } from 'primevue/usetoast';
+import { useRoute } from 'vue-router';
+import DepartmentService from '~/service/DepartmentService';
+import CustodianService from '~/service/CustodianService';
 
 let service = new AssetService();
+let departmentService = new DepartmentService();
+let custodianService = new CustodianService();
+
+let departments = ref([]);
+let custodians = ref([]);
+
 const route = useRoute();
 const toast = useToast();
 
@@ -32,10 +41,26 @@ async function submitAsset() {
     })
 }
 
+function loadDepartments() {
+    departmentService.getDepartmentsOptions().then((data) => {
+        console.log(data);
+        departments.value = data;
+    })
+}
+
+function loadCustodians() {
+    custodianService.getCustodianOptions().then((data) => {
+        console.log(data);
+        custodians.value = data.custodians;
+    })
+}
+
 onMounted(() => {
     service.getAsset(route.params.id).then((data) => {
         createAssetData.value = data.asset;
     })
+    loadDepartments();
+    loadCustodians();
 })
 
 </script>
@@ -83,6 +108,21 @@ onMounted(() => {
                         <InputText id="asset_type_detial" type="text" />
                     </div>
                 </div> -->
+                <div class="col-12 flex flex-column md:flex-row">
+                    <div class="field col-3">
+                        <label class="mr-1 block" for="department">部門群組</label>
+                        <Dropdown id="department" v-model="createAssetData.department_id" :options="departments" optionValue="id" optionLabel="name" />
+                    </div>
+                    <div class="field col-3">
+                        <label class="mr-1 block" for="custodian_id">保管人編號</label>
+                        <Dropdown id="custodian_id" v-model="createAssetData.custodian_id" :options="custodians" optionValue="id" optionLabel="name" />
+                    </div>
+                    <div class="field col-3">
+                        <label class="mr-1 block" for="position">職務名稱</label>
+                        <InputText id="position" type="text" />
+                    </div>
+                </div>
+
                 <div class="col-12 flex flex-column md:flex-row">
                     <div class="field col">
                         <label class="mr-1 block" for="asset_get_day">取得日期</label>

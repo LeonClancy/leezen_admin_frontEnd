@@ -121,14 +121,13 @@ function viewData(department:Department){
         <TreeTable :value="departmentList" :loading="loading">
           <Column field="code" header="部門代號"></Column>
           <Column field="name" header="部門名稱" expander="true"></Column>
-          <Column headerStyle="width: 10rem" header="操作">
+          <Column header="操作">
             <template #body="slotProps">
               <div class="flex flex-wrap gap-2">
-                <Button @click="viewData(slotProps.node.data)" severity="secondary" type="button" label="編輯/查看" rounded />
+                <Button @click="viewData(slotProps.node.data)" severity="success" icon="pi pi-pencil" type="button" rounded/>
                 <Button @click="addDepartment(slotProps.node.data)" type="button" icon="pi pi-plus" rounded
                   v-if="slotProps.node.data.depth < 2" />
-                <Button @click="confirmDeleteData(slotProps.node.data.id)" icon="pi pi-minus"
-                  class="p-button-rounded p-button-danger mr-2 mb-2"></Button>
+                <Button @click="confirmDeleteData(slotProps.node.data.id)" icon="pi pi-minus" severity="danger" rounded></Button>
                 <!-- <Button @click="editData(slotProps.node.data.id)" type="button" icon="pi pi-pencil" rounded severity="success" /> -->
               </div>
             </template>

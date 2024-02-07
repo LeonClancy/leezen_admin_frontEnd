@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { object, string, date } from 'yup';
 import { useCustodianStore } from "@/store/useCustodianStore"
-import { CustodianService } from "~/service/CustodianService";
+import CustodianService from "~/service/CustodianService";
 import useCustodianAPI from '~/composables/api/useCustodianAPI';
 import { useToast } from 'primevue/usetoast';
+import DepartmentService from '~/service/DepartmentService';
 
 const { custodian,currentCustianId  } = storeToRefs(useCustodianStore())
 const { updateCustodian } = useCustodianAPI()
@@ -35,8 +36,18 @@ const [address, addressAttrs] = defineField('address')
 // const [department, departmentAttrs] = defineField('department')
 const [remarks, remarksAttrs] = defineField('remarks')
 // const [position, positionAttrs] = defineField('position')
+const [department_id, departmentAttrs] = defineField('department_id')
+
+const departmentService = new DepartmentService()
+let departments = ref([])
+
 onMounted(()=>{
   init()
+  departmentService.getDepartmentsOptions()
+    .then(data => {
+      departments.value = data;
+      console.log(data);
+    })
 })
 //初始化
 async function init(){
@@ -52,7 +63,8 @@ async function initCustodianInputData(){
     contact_number:custodian.value.contact_number,
     mobile_number:custodian.value.mobile_number,
     address:custodian.value.address,
-    remarks:custodian.value.remarks
+    remarks:custodian.value.remarks,
+    department_id: custodian.value.department_id,
   })
 }
 async function fetchUpdateCustodianData(){
@@ -68,6 +80,7 @@ async function fetchUpdateCustodianData(){
     mobile_number,
     address,
     remarks,
+    department_id
   })
   toast.add({ severity: "success", summary: "更新成功", detail: `您已更新代號 : ${currentCustianId.value}的相關資料`, life: 3000 })
   navigateTo('/data_page/custodian')
@@ -140,7 +153,7 @@ async function fetchUpdateCustodianData(){
           <div class="field col-4 md:col-3">
             <label class="block" for="department">部門群組</label>
             <div>
-              <Dropdown id="department" :class="[errors.department ? 'p-invalid' : '']" v-model="department"
+              <Dropdown id="department" :class="[errors.department ? 'p-invalid' : '']" v-model="department_id"
                 v-bind="departmentAttrs" :options="departments" optionLabel="name" optionValue="id"></Dropdown>
               <p>{{ errors.department ? '請選擇所屬的部門群組' : '' }}</p>
             </div>
