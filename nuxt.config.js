@@ -19,6 +19,7 @@ export default defineNuxtConfig({
         'nuxt-primevue',
         '@vee-validate/nuxt',
         '@pinia/nuxt',
+        'nuxt-vue3-google-signin'
     ],
     primevue: {
         options: { ripple: true },
@@ -29,7 +30,10 @@ export default defineNuxtConfig({
     css: ['primeicons/primeicons.css', 'primeflex/primeflex.scss', 'primevue/resources/primevue.min.css', '@/assets/styles.scss'],
     runtimeConfig: {
         public: {
-            apiBaseUrl: 'http://172.105.204.235/api'
+            apiBaseUrl: 'http://172.105.204.235/api',
         }
     },
+    googleSignIn:{
+        clientId:process.env.NUXT_PUBLIC_GOOGLE_CLIENT_ID
+    }
 });

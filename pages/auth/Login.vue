@@ -3,8 +3,10 @@ import { AuthLogin } from "@/types/auth"
 import AppConfig from '@/layouts/AppConfig.vue';
 import { useAuthStore } from "@/store/useAuthStore"
 import useAuthAPI from "@/composables/api/useAuthAPI"
+
 const { setAuth } = useAuthStore()
 const { login } = useAuthAPI()
+const { handleOnGoogleSignInSuccess, handleOnGoogleSignInError } = useGoogleLogin()
 const authLogin = ref<AuthLogin>({
     email: "",
     password: ""
@@ -61,6 +63,11 @@ async function fetchLogin() {
                             <NuxtLink to="/auth/SignUp"> 去註冊 </NuxtLink>
                         </div>
                         <Button label="登入" class="w-full p-3 text-xl" @click="fetchLogin"></Button>
+                        <div class="text-center mt-5">
+                            <p>用其他登入方式</p>
+                            <GoogleSignInButton @success="handleOnGoogleSignInSuccess" @error="handleOnGoogleSignInError">
+                            </GoogleSignInButton>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -79,4 +86,5 @@ async function fetchLogin() {
 .pi-eye-slash {
     transform: scale(1.6);
     margin-right: 1rem;
-}</style>
+}
+</style>
