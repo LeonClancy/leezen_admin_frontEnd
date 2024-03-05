@@ -1,5 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+    ssr: false,
     typescript: true,
     devtools: { enabled: true },
     app: {
@@ -30,7 +31,7 @@ export default defineNuxtConfig({
     css: ['primeicons/primeicons.css', 'primeflex/primeflex.scss', 'primevue/resources/primevue.min.css', '@/assets/styles.scss'],
     runtimeConfig: {
         public: {
-            apiBaseUrl: 'http://172.105.204.235/api',
+            apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL,
         }
     },
     googleSignIn:{
