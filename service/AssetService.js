@@ -18,8 +18,9 @@ export default class AssetService {
         const response = await fetch(`${this.apiBaseUrl}/assets`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 'Accept': 'application/json',
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify(asset)
         })
@@ -30,6 +31,7 @@ export default class AssetService {
         const response = await fetch(`${this.apiBaseUrl}/assets/${assetId}`, {
             method: 'GET',
             headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             }
@@ -41,8 +43,9 @@ export default class AssetService {
         const response = await fetch(`${this.apiBaseUrl}/assets/${asset.id}`, {
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 'Accept': 'application/json',
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify(asset)
         })
@@ -51,7 +54,12 @@ export default class AssetService {
 
     async deleteAsset(assetId) {
         const response = await fetch(`${this.apiBaseUrl}/assets/${assetId}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
         })
         return await response.json()
     }
