@@ -33,7 +33,6 @@ const createAssetData = ref({
 
 async function submitAsset() {
     service.createAsset(createAssetData.value).then((data) => {
-        console.log(data);
         navigateTo('/data_page/asset_equipment');
     });
 }

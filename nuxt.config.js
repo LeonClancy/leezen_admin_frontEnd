@@ -25,7 +25,7 @@ export default defineNuxtConfig({
         options: { ripple: true },
         components: {
             exclude: ['Editor']
-        }
+        },
     },
     css: ['primeicons/primeicons.css', 'primeflex/primeflex.scss', 'primevue/resources/primevue.min.css', '@/assets/styles.scss'],
     runtimeConfig: {
@@ -33,7 +33,7 @@ export default defineNuxtConfig({
             apiBaseUrl: 'http://172.105.204.235/api',
         }
     },
-    googleSignIn:{
-        clientId:process.env.NUXT_PUBLIC_GOOGLE_CLIENT_ID
+    googleSignIn: {
+        clientId: process.env.NUXT_PUBLIC_GOOGLE_CLIENT_ID
     }
 });

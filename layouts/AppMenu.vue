@@ -1,6 +1,22 @@
 <script setup>
 import AppMenuItem from './AppMenuItem.vue';
 const model = ref([
+     {
+        label:'',
+        items:[
+            {
+                label:'管理功能',
+                icon:'pi pi-star',
+                items:[
+                    {
+                        label:'會員管理',
+                        icon:'pi pi-users',
+                        to:'/manage/member'
+                    },
+                ]
+            }
+        ]
+    },
     {
         label:'',
         items:[
