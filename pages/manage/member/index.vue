@@ -14,7 +14,7 @@ const searchInput = ref<SearchMemberRequest>({
   email: '',
   created_at_start: '',
   created_at_end: '',
-  custodian_name: ''
+  custodian_id: ''
 })
 onMounted(() => {
   initData()
@@ -50,17 +50,17 @@ async function search() {
       <div class="card">
         <div class="col-12 flex flex-column md:flex-row">
           <div class="mr-2">
-            <label class="mr-1 block" for="namwe">會員姓名</label>
+            <label class="mr-1 block" for="namwe">帳號名稱</label>
             <InputText id="namwe" type="text" v-model="searchInput.name" />
           </div>
           <div class="mr-2">
             <label class="mr-1 block" for="email">會員信箱</label>
             <InputText id="email" type="text" v-model="searchInput.email" />
           </div>
-          <div>
+          <!-- <div>
             <label class="mr-1 block" for="custodian_namwe">保管人姓名</label>
-            <InputText id="custodian_namwe" type="text" v-model="searchInput.custodian_name" />
-          </div>
+            <InputText id="custodian_namwe" type="text" v-model="searchInput.custodian_id" />
+          </div> -->
         </div>
         <div class="col-12 flex flex-column md:flex-row">
           <div class="mr-2">
@@ -94,7 +94,7 @@ async function search() {
               {{ data.id }}
             </template>
           </Column>
-          <Column field="name" header="姓名" style="min-width: 12rem">
+          <Column field="name" header="帳號名稱" style="min-width: 12rem">
             <template #body="{ data }">
               {{ data.name }}
             </template>
@@ -106,7 +106,7 @@ async function search() {
           </Column>
           <Column field="code" header="保管人名稱" style="min-width: 12rem">
             <template #body="{ data }">
-              {{ data.custodian_name }}
+              {{ data.custodian?.name }}
             </template>
           </Column>
           <Column field="custodian_operation" header="操作" style="min-width: 12rem">

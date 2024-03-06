@@ -29,7 +29,7 @@ export default () => {
     let data;
     if(payload) {
       if(payload.created_at_end || payload.created_at_start) data = await fetchApiBase(`/users/?name=${payload.name}&email=${payload.email}&custodian_name=${payload.custodian_name}&create_at_start=${payload.created_at_start}&created_at_end=${payload.created_at_end}`,"get");
-      else data = await fetchApiBase(`/users/?name=${payload.name}&email=${payload.email}&custodian_name=${payload.custodian_name}`,"get");
+      else data = await fetchApiBase(`/users/?name=${payload.name}&email=${payload.email}&custodian_id=${payload.custodian_id}`,"get");
     }
     else data = await fetchApiBase('/users','get')  
     return data.users as Member[];

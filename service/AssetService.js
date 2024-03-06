@@ -4,7 +4,13 @@ export default class AssetService {
     }
 
     async getAssets() {
-        const response = await fetch(`${this.apiBaseUrl}/assets`)
+        const response = await fetch(`${this.apiBaseUrl}/assets`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
+        })
         return await response.json()
     }
 

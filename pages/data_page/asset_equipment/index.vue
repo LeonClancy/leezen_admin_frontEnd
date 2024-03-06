@@ -43,9 +43,14 @@ function deleteData(id: string) {
           <Button label="列印" class="p-button-outlined p-button-secondary mr-2 mb-2" />
         </div>
         <DataTable :loading="loading" :value="assets" paginator showGridlines :rows="10" dataKey="id">
-          <Column field="index" header="編號" style="min-width: 12rem">
+          <!-- <Column field="index" header="編號" style="min-width: 12rem">
             <template #body="{ data }">
               {{ data.id }}
+            </template>
+          </Column> -->
+          <Column field="deparmentName" header="部門名稱" style="min-width: 12rem">
+            <template #body="{ data }">
+              {{ data.department_name }}
             </template>
           </Column>
           <Column field="id" header="資產編號" style="min-width: 12rem">
@@ -76,7 +81,7 @@ function deleteData(id: string) {
           <Column field="custodian_operation" header="操作" style="min-width: 12rem">
             <template #body="{ data }">
               <Button @click="viewInfo(data.id)" label="查看/編輯" class="p-button-rounded p-button-success mr-2 mb-2" />
-              <Button @click="deleteData(data.id)" label="刪除" class="p-button-rounded p-button-danger mr-2 mb-2" />
+              <!-- <Button @click="deleteData(data.id)" label="刪除" class="p-button-rounded p-button-danger mr-2 mb-2" /> -->
               <!-- {{ data.id }} -->
             </template>
           </Column>

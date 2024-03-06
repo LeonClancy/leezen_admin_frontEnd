@@ -2,7 +2,8 @@ export declare interface Member {
     id: number;
     name: string;
     email: string;
-    custodian_name: string;
+    custodian_id: number;
+    role_id: number;
     // created_at?:string
     // updated_at?:string
     // email_verified_at?:string
@@ -13,13 +14,14 @@ export interface MemberDeleteRequest {
 export interface MemberCreateRequest {
     name: string;
     email: string;
-    custodian_name: string;
+    custodian_id: number;
 }
 export interface MemberUpdateRequest {
     id: number;
     name: string;
     email: string;
-    custodian_name: string;
+    custodian_id: number;
+    role_id: number;
 }
 
 export interface SearchMemberRequest{
@@ -27,5 +29,5 @@ export interface SearchMemberRequest{
    email?:string,
    created_at_start?:string, //建立時間
    created_at_end?:string  //結束時間
-   custodian_name?:string
+   custodian_id?:number
 }

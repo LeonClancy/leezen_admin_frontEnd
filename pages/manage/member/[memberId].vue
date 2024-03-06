@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/component-tags-order -->
 <template>
   <div class="grid">
     <div class="col-12">
@@ -23,11 +24,19 @@
           </div>
         </div>
         <div class="flex align-items-center gap-3 mb-5">
-          <label for="custodian_name" class="font-semibold w-6rem">保管人姓名</label>
+          <label for="custodian_name" class="font-semibold w-6rem">連結保管人</label>
           <div>
-            <InputText id="custodian_name" class="flex-auto" :class="[errors.custodian_name ? 'p-invalid' : '']" autocomplete="off"
-              v-model="custodian_name" v-bind="custodian_nameAttrs" />
-            <p>{{ errors.custodian_name ? '請填寫保管人姓名' : '' }}</p>
+            <Dropdown id="custodian_id" :class="[errors.custodian_id ? 'p-invalid' : '']" class="w-full" option-label="name" option-value="id" :options="custodians"
+              v-model="custodian_id" v-bind="custodianIdAttrs" />
+            <p>{{ errors.custodian_id ? '請選擇保管人' : '' }}</p>
+          </div>
+        </div>
+        <div class="flex align-items-center gap-3 mb-5">
+          <label for="role" class="font-semibold w-6rem">角色</label>
+          <div>
+            <Dropdown id="role" class="flex-auto" :class="[errors.role ? 'p-invalid' : '']" option-label="name" option-value="id" :options="roles"
+              v-model="role_id" v-bind="roleAttrs" />
+            <p>{{ errors.role ? '請填寫角色' : '' }}</p>
           </div>
         </div>
         <div class="col-12 flex justify-content-end">
@@ -43,39 +52,62 @@
 </template>
 
 <script setup lang="ts">
-import { object, string } from 'yup';
+import { object, string, number } from 'yup';
 import { useMembersStore } from "@/store/useMembersStore"
 import useMemberAPI from '~/composables/api/useMemberAPI';
 import { useToast } from "primevue/usetoast";
+import CustodianService from '~/service/CustodianService';
+import RoleService from '~/service/RoleService';
+
 const toast = useToast();
 const { updateMember } = useMemberAPI()
 const { member } = storeToRefs(useMembersStore())
+const custodianService = new CustodianService()
+const roleService = new RoleService()
+
+let custodians = ref([])
+let roles = ref([])
+
+onMounted(async () => {
+  custodianService.getCustodians().then((res) => {
+    custodians.value = res.custodians
+  })
+  roleService.getRoles().then((res) => {
+    roles.value = res.roles
+  })
+})
+
 //validate 
 const { defineField, values, errors, meta, resetForm, setValues } = useForm({
   validationSchema: object({
     name: string().required(),
     email: string().required(),
-    custodian_name: string().required()
+    custodian_id: number().required(),
+    role_id: number().required(),
   }),
 })
 const [name, nameAttrs] = defineField('name')
 const [email, emailAttrs] = defineField('email')
-const [custodian_name, custodian_nameAttrs] = defineField('custodian_name')
+const [custodian_id, custodianIdAttrs] = defineField('custodian_id')
+const [role_id, roleAttrs] = defineField('role_id')
+
 initInputData()
 async function initInputData() {
   setValues({
     name: member.value.name,
     email: member.value.email,
-    custodian_name: member.value.custodian_name
+    custodian_id: member.value.custodian_id,
+    role_id: member.value.role_id,
   })
 }
 async function fetchUpdateCustodianData() {
   if(!meta.value.valid) return
   await updateMember({
-    id:member.value.id,
+    id: member.value.id,
     name: member.value.name,
     email: member.value.email,
-    custodian_name: member.value.custodian_name
+    custodian_id: custodian_id.value,
+    role_id: role_id.value,
   })
   toast.add({ severity: "success", summary: "更新成功", detail: `您已更新代號 : ${member.value.id}的相關資料`, life: 3000 })
   navigateTo('/manage/member')
