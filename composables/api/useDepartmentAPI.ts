@@ -1,4 +1,10 @@
-import { type DepartmentDeleteRequest, type DepartmentCreateRequest, type DepartmentUpdateRequest,type Department } from "@/types/department" 
+import { 
+  type DepartmentDeleteRequest, 
+  type DepartmentCreateRequest, 
+  type DepartmentUpdateRequest,
+  type DepartmentsOption,
+  type Department 
+} from "@/types/department" 
 import useApiBase from "./useApiBase"
 
 export default () => {
@@ -11,19 +17,23 @@ export default () => {
   }
   async function getDepartment(id:string | number){
    const {department } = await fetchApiBase(`/departments/${id}`,"get");
-    return department as unknown as Department; 
+    return department as Department; 
   }
   async function createDepartment(payload:DepartmentCreateRequest){
    const {department } = await fetchApiBase(`/departments`,"post",payload);
-    return department as unknown as Department; 
+    return department as Department; 
   }
    async function updateDepartment(payload:DepartmentUpdateRequest){
    const {department } = await fetchApiBase(`/departments/${payload.id}`,"put",payload);
-    return department as unknown as Department; 
+    return department as Department; 
   }
   async function deleteDepartment(payload: DepartmentDeleteRequest){
     const {department } = await fetchApiBase(`/departments/${payload.id}`,"delete");
-    return department as unknown as Department;
+    return department as Department;
+  }
+  async function getDepartmentsOptions(){
+    const options = await fetchApiBase(`/departments/type/options`, 'get')
+    return options as DepartmentsOption[]
   }
  
   return {
@@ -33,6 +43,7 @@ export default () => {
     getDepartment,
     createDepartment,
     updateDepartment,
-    deleteDepartment
+    deleteDepartment,
+    getDepartmentsOptions
   }
 };

@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { object, string, date } from 'yup';
 import { useCustodianStore } from "@/store/useCustodianStore"
-import CustodianService from "~/service/CustodianService";
 import useCustodianAPI from '~/composables/api/useCustodianAPI';
 import { useToast } from 'primevue/usetoast';
-import DepartmentService from '~/service/DepartmentService';
+import useDepartmentAPI from '~/composables/api/useDepartmentAPI';
+import { DepartmentsOption } from '~/types/department';
 
 const { custodian,currentCustianId  } = storeToRefs(useCustodianStore())
 const { updateCustodian } = useCustodianAPI()
+const { getDepartmentsOptions } = useDepartmentAPI()
 const toast = useToast()
 //validate 
 const { defineField, errors, meta, values, setValues } = useForm({
@@ -38,19 +39,14 @@ const [remarks, remarksAttrs] = defineField('remarks')
 // const [position, positionAttrs] = defineField('position')
 const [department_id, departmentAttrs] = defineField('department_id')
 
-const departmentService = new DepartmentService()
-let departments = ref([])
+let departments = ref<DepartmentsOption[]>([])
 
 onMounted(()=>{
   init()
-  departmentService.getDepartmentsOptions()
-    .then(data => {
-      departments.value = data;
-      console.log(data);
-    })
 })
 //初始化
 async function init(){
+  initDepartmentOptions()
   await initCustodianInputData() 
 }
 async function initCustodianInputData(){
@@ -66,6 +62,10 @@ async function initCustodianInputData(){
     remarks:custodian.value.remarks,
     department_id: custodian.value.department_id,
   })
+}
+async function initDepartmentOptions(){
+  const options = await getDepartmentsOptions()
+  departments.value = options
 }
 async function fetchUpdateCustodianData(){
   if(!meta.value.valid) return

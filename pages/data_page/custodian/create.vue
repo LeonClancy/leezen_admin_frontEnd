@@ -1,21 +1,13 @@
 <script setup lang="ts">
 import { object, string, date } from 'yup';
-import { Position } from "@/types/custodian"
-import { ref } from "vue";
-import CustodianService from "~/service/CustodianService";
-import DepartmentService from "~/service/DepartmentService";
-import { useToast } from 'primevue/usetoast';
+import { DepartmentsOption } from '~/types/department';
+import useDepartmentAPI from '~/composables/api/useDepartmentAPI';
+import useCustodianAPI from '~/composables/api/useCustodianAPI';
 
-const service = new CustodianService()
-const departmentService = new DepartmentService()
-let departments = ref([]);
-const toast = useToast();
+const { createCustodian } = useCustodianAPI()
+const { getDepartmentsOptions } = useDepartmentAPI()
+let departments = ref<DepartmentsOption[]>([]);
 
-const positionItems = ref([
-    { name: '部長', code: Position.部長 },
-    { name: '科長', code: Position.科長 },
-    { name: '課長', code: Position.課長 }
-]);
 //validate 
 const { defineField, errors, meta, values } = useForm({
   validationSchema: object({
@@ -29,7 +21,6 @@ const { defineField, errors, meta, values } = useForm({
     address:string().required(),
     department_id:string().required(),
     remarks:string(),
-    // position:string().required()
   }),
 })
 const [code, codeAttrs] = defineField('code')
@@ -42,32 +33,18 @@ const [mobile_number, mobile_numberAttrs] = defineField('mobile_number')
 const [address, addressAttrs] = defineField('address')
 const [department_id, departmentAttrs] = defineField('department_id')
 const [remarks, remarksAttrs] = defineField('remarks')
-// const [position, positionAttrs] = defineField('position')
 
-function submitCustodian() {
-    console.log(values)
+await initDepartmentOptions()
+
+async function submitCustodian() {
     if(!meta.value.valid) return console.log(errors.value)
-    service.createCustodian(values).then((data) => {
-        if (data.errors) {
-            console.log(data.errors);
-            toast.add({ severity: 'error', summary: '新增失敗', detail: data.errors, life: 3000});
-            return;
-        }
-        console.log(data);
-        navigateTo('/data_page/custodian');
-    })
+    const custodian =  await createCustodian(values)
+    if(custodian) navigateTo('/data_page/custodian');
 }
-
-function loadDepartments() {
-    departmentService.getDepartmentsOptions().then((data) => {
-        console.log(data);
-        departments.value = data;
-    })
+async function initDepartmentOptions(){
+  const options = await getDepartmentsOptions()
+  departments.value = options
 }
-
-onMounted(() => {
-    loadDepartments();
-})
 
 </script>
 

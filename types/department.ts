@@ -33,3 +33,7 @@ export declare interface DepartmentUpdateRequest{
     name:string,
     code:string,
 }
+export declare interface DepartmentsOption{
+    id:string,
+    name:string
+}

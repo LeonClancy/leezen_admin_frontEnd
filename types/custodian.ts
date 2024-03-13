@@ -13,6 +13,18 @@ export declare interface Custodian {
     updated_at: string;
     department_id: string | number;
 }
+export declare interface CustodianCreateRequest{
+    code: string;
+    id_number: string;
+    name: string;
+    email: string;
+    contact_number: string;
+    mobile_number: string;
+    birthday: string;
+    remarks: string | null;
+    address: string; 
+    department_id: string | number;
+}
 export declare interface CustodianUpdateRequest {
     id: string | number;
     code: string;
@@ -24,6 +36,7 @@ export declare interface CustodianUpdateRequest {
     birthday: string;
     remarks: string | null;
     address: string;
+    department_id: string | number;
 }
 export declare interface CustodianDeleteRequest {
     id: string | number;
