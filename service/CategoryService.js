@@ -33,4 +33,13 @@ export default class CategoryService {
             body: JSON.stringify(category),
         })
     }
+
+    getCategoryOptions() {
+        return fetch(`${this.apiBaseUrl}/categories/options`, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
+        })
+    }
 }

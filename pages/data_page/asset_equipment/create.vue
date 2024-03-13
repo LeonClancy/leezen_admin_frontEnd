@@ -2,13 +2,16 @@
 import AssetService from '~/service/AssetService';
 import DepartmentService from '~/service/DepartmentService';
 import CustodianService from '~/service/CustodianService';
+import CategoryService from '~/service/CategoryService';
 
 let service = new AssetService();
 let departmentService = new DepartmentService();
 let custodianService = new CustodianService();
+let categorieService = new CategoryService();
 
 let departments = ref([]);
 let custodians = ref([]);
+let categories = ref([]);
 
 const createAssetData = ref({
     asset_number:'',
@@ -28,6 +31,7 @@ const createAssetData = ref({
     warranty_expiration_date: '',
     department_id: '',
     custodian_id: '',
+    category_id: '',
 })
 
 
@@ -43,6 +47,14 @@ onMounted(() => {
     });
     custodianService.getCustodianOptions().then((data) => {
         custodians.value = data.custodians;
+    });
+    categorieService.getCategoryOptions().then((res) => {
+        return res.json()
+    }).then((data) => {
+        console.log(data);
+        categories.value = data.categories;
+    }).catch((err) => {
+        console.log(err);
     });
 });
 
@@ -80,17 +92,6 @@ onMounted(() => {
                         <InputText id="asset_product_code" type="text" v-model="createAssetData.product_serial_number" />
                     </div>
                 </div>
-                <!-- <div class="col-12 flex">
-                    <div class="field col-12">
-                        <label class="mr-1 block">分類類別</label>
-                        <Dropdown id="types" v-model="typeItem" :options="typeItems" optionLabel="name"
-                            placeholder="Select One">
-                        </Dropdown>
-                        <Dropdown id="type_name" v-model="typeNameItem" :options="typeNameItems" optionLabel="name"
-                            placeholder="Select One"></Dropdown>
-                        <InputText id="asset_type_detial" type="text" />
-                    </div>
-                </div> -->
                 <div class="col-12 flex flex-column md:flex-row">
                     <div class="field col">
                         <label class="mr-1 block" for="asset_get_day">取得日期</label>
@@ -121,6 +122,10 @@ onMounted(() => {
                     <div class="field col-3">
                         <label class="mr-1 block" for="custodian_id">保管人編號</label>
                         <Dropdown id="custodian_id" v-model="createAssetData.custodian_id" :options="custodians" optionValue="id" optionLabel="name" />
+                    </div>
+                    <div class="field col-3">
+                        <label class="mr-1 block" for="category">類型</label>
+                        <Dropdown id="category" v-model="createAssetData.category_id" :options="categories" optionValue="id" optionLabel="name" />
                     </div>
                     <div class="field col-3">
                         <label class="mr-1 block" for="position">職務名稱</label>
