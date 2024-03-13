@@ -28,6 +28,11 @@ const model = ref([
                         label: '部門群組',
                         icon: 'pi pi-circle-fill',
                         to: '/data_page/department_group'
+                    },
+                    {
+                        label: '資產類型管理',
+                        icon: 'pi pi-circle-fill',
+                        to: '/data_page/category'
                     }
                 ]
             }
