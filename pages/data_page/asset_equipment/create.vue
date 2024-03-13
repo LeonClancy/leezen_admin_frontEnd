@@ -28,7 +28,6 @@ const createAssetData = ref({
     service_contact_phone: '',
     contact_person: '',
     warranty_period: '',
-    warranty_expiration_date: '',
     department_id: '',
     custodian_id: '',
     category_id: '',
@@ -95,7 +94,7 @@ onMounted(() => {
                 <div class="col-12 flex flex-column md:flex-row">
                     <div class="field col">
                         <label class="mr-1 block" for="asset_get_day">取得日期</label>
-                        <InputText id="asset_get_day" type="text" v-model="createAssetData.acquisition_date" />
+                        <Calendar id="asset_get_day" type="text" v-model="createAssetData.acquisition_date" />
                     </div>
                     <div class="field col">
                         <label class="mr-1 block" for="asset_">取得來源</label>
@@ -103,15 +102,15 @@ onMounted(() => {
                     </div>
                     <div class="field col">
                         <label class="mr-1 block" for="useful_life">耐用年限</label>
-                        <InputText id="useful_life" type="text" v-model="createAssetData.useful_life_years" />
+                        <InputNumber id="useful_life" type="text" v-model="createAssetData.useful_life_years" />
                     </div>
                     <div class="field col">
                         <label class="mr-1 block" for="useful_life">取得成本</label>
-                        <InputText id="useful_life" type="text" v-model="createAssetData.acquisition_cost" />
+                        <InputNumber id="useful_life" type="text" v-model="createAssetData.acquisition_cost" :minFractionDigits="2" :maxFractionDigits="5" />
                     </div>
                     <div class="field col">
                         <label class="mr-1 block" for="current_value">現值</label>
-                        <InputText id="current_value" type="text" v-model="createAssetData.current_value" />
+                        <InputNumber id="current_value" type="text" v-model="createAssetData.current_value" :minFractionDigits="2" :maxFractionDigits="5" />
                     </div>
                 </div>
                 <div class="col-12 flex flex-column md:flex-row">
@@ -149,11 +148,7 @@ onMounted(() => {
                 <div class="col-12 flex flex-column md:flex-row">
                     <div class="field col">
                         <label class="mr-1 block" for="warranty_period">保固年限</label>
-                        <InputText id="warranty_period" type="text" v-model="createAssetData.warranty_period" />
-                    </div>
-                    <div class="field col">
-                        <label class="mr-1 block" for="warrant_date">保固到期日</label>
-                        <InputText id="warrant_date" type="text" v-model="createAssetData.warranty_expiration_date" />
+                        <Calendar id="warranty_period" type="text" v-model="createAssetData.warranty_period" />
                     </div>
                 </div>
                 <div class="col-12 flex justify-content-end">

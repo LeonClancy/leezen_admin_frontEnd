@@ -53,14 +53,9 @@ async function deleteData(id:number) {
           <Button label="列印" class="p-button-outlined p-button-secondary mr-2 mb-2" />
         </div>
         <DataTable :loading="loading" :value="custodianList" paginator showGridlines :rows="10" dataKey="id">
-          <Column field="index" header="編號" style="min-width: 12rem">
+          <Column field="index" header="保管人編號" style="min-width: 12rem">
             <template #body="{ data }">
               {{ data.code }}
-            </template>
-          </Column>
-          <Column field="custodian_id" header="保管人代號" style="min-width: 12rem">
-            <template #body="{ data }">
-              {{ data.id }}
             </template>
           </Column>
           <Column field="custodian_name" header="保管人姓名" style="min-width: 12rem">

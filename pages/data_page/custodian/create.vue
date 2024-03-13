@@ -20,7 +20,6 @@ const positionItems = ref([
 const { defineField, errors, meta, values } = useForm({
   validationSchema: object({
     name: string().required(),
-    code: string().required(),
     email:string().required().email(),
     id_number:string().required(),
     birthday:date().required(),
@@ -32,7 +31,6 @@ const { defineField, errors, meta, values } = useForm({
     // position:string().required()
   }),
 })
-const [code, codeAttrs] = defineField('code')
 const [name, nameAttrs] = defineField('name')
 const [email, emailAttrs] = defineField('email')
 const [id_number, id_numberAttrs] = defineField('id_number')
@@ -76,15 +74,6 @@ onMounted(() => {
         <div class="col-12">
             <div class="card">
                 <h5>新增保管人</h5>
-                <div class="col-12">
-                    <div class="field col">
-                        <label class="mr-1 block" for="custodian_id">保管人代號</label>
-                        <div>
-                            <InputText id="custodian_id" :class="[errors.code ? 'p-invalid' : '']" type="text" v-model="code" v-bind="codeAttrs"/>
-                            <p>{{ errors.code ? '請填寫代號' : '' }}</p>
-                        </div>
-                    </div>
-                </div>
                 <div class="col-12 flex flex-column md:flex-row">
                     <div class="field col-4">
                         <label class="mr-1 block" for="custodian_name">姓名</label>
