@@ -1,4 +1,5 @@
 import { AuthLogin, AuthRegistry, AuthLoginRespon, AuthRegistryRespon } from '@/types/auth';
+import { type CredentialResponse } from 'vue3-google-signin';
 import useApiBase from './useApiBase';
 
 export default () => {
@@ -9,9 +10,17 @@ export default () => {
         const { token } = await fetchApiBase('/login', 'post', payload);
         return { token } as AuthLoginRespon;
     }
+    async function googleLogin(payload: CredentialResponse){
+        const { token } = await fetchApiBase('/auth/google', 'post', payload)
+        return token as string
+    }
     async function registry(payload: AuthRegistry) {
         const { user } = await fetchApiBase('/register', 'post', payload);
         return user as AuthRegistryRespon;
+    }
+    async function getAuth(){ //取得當前登入的使用者
+        const res = await fetchApiBase('/auth/user', 'get')
+        return res
     }
     
     return {
@@ -19,5 +28,7 @@ export default () => {
         //methods
         login,
         registry,
+        googleLogin,
+        getAuth
     };
 };

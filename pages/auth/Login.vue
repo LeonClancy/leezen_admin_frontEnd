@@ -4,7 +4,7 @@ import AppConfig from '@/layouts/AppConfig.vue';
 import { useAuthStore } from "@/store/useAuthStore"
 import useAuthAPI from "@/composables/api/useAuthAPI"
 
-const { setAuth } = useAuthStore()
+const { setAuthToken } = useAuthStore()
 const { login } = useAuthAPI()
 const { handleOnGoogleSignInSuccess, handleOnGoogleSignInError } = useGoogleLogin()
 const authLogin = ref<AuthLogin>({
@@ -21,9 +21,7 @@ async function fetchLogin() {
     const { token } = await login(authLogin.value)
     if (token) {
         window.localStorage.setItem('token', token)
-        setAuth({
-            token
-        })
+        setAuthToken( token )
         navigateTo('/')
     }
 }

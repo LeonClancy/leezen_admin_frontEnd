@@ -5,24 +5,29 @@ import { Auth } from "@/types/auth"
 export const useAuthStore = defineStore("authStore", () => {
   // 初始状态
   const initState = {
-    auth:{
-      token:''
-    },
+    authToken:'',
+    role_id:0
   };
 
   //state
-  const auth = ref<Auth>(initState.auth);
+  const authToken = ref<string>(initState.authToken);
+  const authRole = ref<number>(initState.role_id)
 
   //actions
-  function setAuth(payload:Auth){
-    auth.value = payload
-    console.log('設置token')
+  function setAuthToken(payload:string){
+    authToken.value = payload
+    console.log('pina token', authToken.value)
+  }
+  function setAuthRole(payload:number){
+    authRole.value = payload
   }
 
   return {
     //data
-    auth,
+    authToken,
+    authRole,
     //methods
-    setAuth,
+    setAuthToken,
+    setAuthRole
   };
 });
