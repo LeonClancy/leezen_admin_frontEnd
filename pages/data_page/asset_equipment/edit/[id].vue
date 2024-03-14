@@ -5,13 +5,16 @@ import { useToast } from 'primevue/usetoast';
 import { useRoute } from 'vue-router';
 import DepartmentService from '~/service/DepartmentService';
 import CustodianService from '~/service/CustodianService';
+import CategoryService from '~/service/CategoryService';
 
 let service = new AssetService();
 let departmentService = new DepartmentService();
 let custodianService = new CustodianService();
+let categorieService = new CategoryService();
 
 let departments = ref([]);
 let custodians = ref([]);
+let categories = ref([]);
 
 const route = useRoute();
 const toast = useToast();
@@ -32,6 +35,7 @@ const createAssetData = ref({
     contact_person: '',
     warranty_period: '',
     warranty_expiration_date: '',
+    department_id: '',
 })
 
 async function submitAsset() {
@@ -55,12 +59,24 @@ function loadCustodians() {
     })
 }
 
+function loadCategories() {
+    categorieService.getCategoryOptions().then((res) => {
+        return res.json()
+    }).then((data) => {
+        console.log(data);
+        categories.value = data.categories;
+    }).catch((err) => {
+        console.log(err);
+    });
+}
+
 onMounted(() => {
     service.getAsset(route.params.id).then((data) => {
         createAssetData.value = data.asset;
     })
     loadDepartments();
     loadCustodians();
+    loadCategories();
 })
 
 </script>
@@ -97,17 +113,6 @@ onMounted(() => {
                         <InputText id="asset_product_code" type="text" v-model="createAssetData.product_serial_number" />
                     </div>
                 </div>
-                <!-- <div class="col-12 flex">
-                    <div class="field col-12">
-                        <label class="mr-1 block">分類類別</label>
-                        <Dropdown id="types" v-model="typeItem" :options="typeItems" optionLabel="name"
-                            placeholder="Select One">
-                        </Dropdown>
-                        <Dropdown id="type_name" v-model="typeNameItem" :options="typeNameItems" optionLabel="name"
-                            placeholder="Select One"></Dropdown>
-                        <InputText id="asset_type_detial" type="text" />
-                    </div>
-                </div> -->
                 <div class="col-12 flex flex-column md:flex-row">
                     <div class="field col-3">
                         <label class="mr-1 block" for="department">部門群組</label>
@@ -116,6 +121,10 @@ onMounted(() => {
                     <div class="field col-3">
                         <label class="mr-1 block" for="custodian_id">保管人編號</label>
                         <Dropdown id="custodian_id" v-model="createAssetData.custodian_id" :options="custodians" optionValue="id" optionLabel="name" />
+                    </div>
+                    <div class="field col-3">
+                        <label class="mr-1 block " for="category_id">類別</label>
+                        <Dropdown id="category_id" v-model="createAssetData.category_id" :options="categories" optionValue="id" optionLabel="name" />
                     </div>
                     <div class="field col-3">
                         <label class="mr-1 block" for="position">職務名稱</label>
