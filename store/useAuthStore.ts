@@ -16,7 +16,6 @@ export const useAuthStore = defineStore("authStore", () => {
   //actions
   function setAuthToken(payload:string){
     authToken.value = payload
-    console.log('pina token', authToken.value)
   }
   function setAuthRole(payload:number){
     authRole.value = payload

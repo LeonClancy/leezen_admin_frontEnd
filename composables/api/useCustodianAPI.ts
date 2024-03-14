@@ -11,19 +11,19 @@ export default () => {
 
   //MyModel API
   async function getCustodians(){
-   const {custodians } = await fetchApiBase(`/custodians`,"get");
+   const { custodians } = await fetchApiBase(`/custodians`,"get");
     return custodians as Custodian[]; 
   }
   async function getCustodian(id:string){
-   const {custodian } = await fetchApiBase(`/custodians/${id}`,"get");
+   const { custodian } = await fetchApiBase(`/custodians/${id}`,"get");
     return custodian as Custodian; 
   }
   async function updateCustodian(payload: CustodianUpdateRequest){
-    const {custodian } = await fetchApiBase(`/custodians/${payload.id}`,"patch",payload);
+    const { custodian } = await fetchApiBase(`/custodians/${payload.id}`,"patch",payload);
     return custodian as Custodian;
   }
   async function deleteCustodian(payload: CustodianDeleteRequest) {
-    const {custodian } = await fetchApiBase(`/custodians/${payload.id}`,"delete");
+    const { custodian } = await fetchApiBase(`/custodians/${payload.id}`,"delete");
     return custodian as Custodian;
   }
   
