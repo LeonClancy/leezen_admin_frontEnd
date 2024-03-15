@@ -1,24 +1,20 @@
 <script setup lang="ts">
 import { useAssetsStore } from "@/store/useAssetsStore"
-import AssetService from "~/service/AssetService";
+import useAssetAPI from "~/composables/api/useAssetAPI";
 
 const { assetsList } = storeToRefs(useAssetsStore())
 const { setAssetsList, setCurrentAssetId } = useAssetsStore()
-
-let assets = ref([])
-
-const service = new AssetService()
+const { getAssets } = useAssetAPI()
 
 const loading = ref(true)
 onMounted(() => {
   loadAssets()
 })
 
-function loadAssets() {
-  service.getAssets().then((data) => {
-    assets.value = data.assets
-    loading.value = false
-  })
+async function loadAssets() {
+  const assetsList = await getAssets()
+  setAssetsList(assetsList)
+  loading.value = false
 }
 
 function viewInfo(id: string) {
@@ -42,7 +38,7 @@ function deleteData(id: string) {
           </NuxtLink>
           <Button label="列印" class="p-button-outlined p-button-secondary mr-2 mb-2" />
         </div>
-        <DataTable :loading="loading" :value="assets" paginator showGridlines :rows="10" dataKey="id">
+        <DataTable :loading="loading" :value="assetsList" paginator showGridlines :rows="10" dataKey="id">
           <!-- <Column field="index" header="編號" style="min-width: 12rem">
             <template #body="{ data }">
               {{ data.id }}

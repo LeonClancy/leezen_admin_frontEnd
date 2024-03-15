@@ -1,19 +1,20 @@
 <script setup lang="ts">
-import AssetService from '~/service/AssetService';
 import DepartmentService from '~/service/DepartmentService';
 import CustodianService from '~/service/CustodianService';
 import CategoryService from '~/service/CategoryService';
+import useAssetAPI from '~/composables/api/useAssetAPI';
+import { CreateAssetRequest } from '~/types/assets';
 
-let service = new AssetService();
 let departmentService = new DepartmentService();
 let custodianService = new CustodianService();
 let categorieService = new CategoryService();
+const { createAsset } = useAssetAPI()
 
 let departments = ref([]);
 let custodians = ref([]);
 let categories = ref([]);
 
-const createAssetData = ref({
+const createAssetData = ref<CreateAssetRequest>({
     asset_number:'',
     name:'',
     brand_model:'',
@@ -21,23 +22,22 @@ const createAssetData = ref({
     product_serial_number:'',
     acquisition_date: '',
     acquisition_source: '',
-    useful_life_years: '',
-    acquisition_cost: '',
-    current_value: '',
+    useful_life_years: 0,
+    acquisition_cost: 0,
+    current_value: 0,
     service_vendor: '',
     service_contact_phone: '',
     contact_person: '',
     warranty_period: '',
-    department_id: '',
-    custodian_id: '',
-    category_id: '',
+    department_id: 0,
+    custodian_id: 0,
+    category_id: 0,
 })
 
 
 async function submitAsset() {
-    service.createAsset(createAssetData.value).then((data) => {
-        navigateTo('/data_page/asset_equipment');
-    });
+    await createAsset(createAssetData.value)
+    navigateTo('/data_page/asset_equipment');
 }
 
 onMounted(() => {

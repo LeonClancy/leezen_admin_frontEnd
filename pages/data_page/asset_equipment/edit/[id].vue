@@ -1,16 +1,18 @@
 <script setup>
-import AssetService from '~/service/AssetService';
 import { ref } from 'vue';
 import { useToast } from 'primevue/usetoast';
 import { useRoute } from 'vue-router';
 import DepartmentService from '~/service/DepartmentService';
 import CustodianService from '~/service/CustodianService';
 import CategoryService from '~/service/CategoryService';
+import useAssetAPI from '~/composables/api/useAssetAPI';
+import { useAssetsStore } from '~/store/useAssetsStore';
 
-let service = new AssetService();
 let departmentService = new DepartmentService();
 let custodianService = new CustodianService();
 let categorieService = new CategoryService();
+const { updateAsset } = useAssetAPI()
+const { asset } = storeToRefs(useAssetsStore())
 
 let departments = ref([]);
 let custodians = ref([]);
@@ -38,11 +40,21 @@ const createAssetData = ref({
     department_id: '',
 })
 
+init()
+
+function init(){
+    fetchAssets()
+    loadDepartments();
+    loadCustodians();
+    loadCategories();
+}
+async function fetchAssets(){
+    createAssetData.value = asset.value
+}
 async function submitAsset() {
-    service.updateAsset(route.params.id, createAssetData.value).then((data) => {
-        console.log(data);
-        toast.add({ severity: 'success', summary: '更新成功', detail: '資產設備已更新', life: 3000});
-    })
+    await updateAsset(route.params.id, createAssetData.value)
+    toast.add({ severity: 'success', summary: '更新成功', detail: '資產設備已更新', life: 3000});
+    navigateTo('/data_page/asset_equipment');
 }
 
 function loadDepartments() {
@@ -69,15 +81,6 @@ function loadCategories() {
         console.log(err);
     });
 }
-
-onMounted(() => {
-    service.getAsset(route.params.id).then((data) => {
-        createAssetData.value = data.asset;
-    })
-    loadDepartments();
-    loadCustodians();
-    loadCategories();
-})
 
 </script>
 
@@ -187,7 +190,7 @@ onMounted(() => {
                 </div>
                 <div class="col-12 flex justify-content-end">
                     <Button label="確認" class="mr-2 mb-2" @click="submitAsset"></Button>
-                    <NuxtLink to="/data_page/custodian">
+                    <NuxtLink to="/data_page/asset_equipment">
                         <Button label="取消" class="p-button-outlined p-button-secondary mr-2 mb-2" />
                     </NuxtLink>
                 </div>
