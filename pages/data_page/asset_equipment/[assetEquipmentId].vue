@@ -45,23 +45,18 @@
             <label class="mr-1 block" for="asset_get_day">取得日期</label>
             <InputText id="asset_get_day" type="text" v-model="editAsset.acquire_date" />
           </div>
-          <div class="field col">
-            <label class="mr-1 block" for="gaint_source">取得來源</label>
-            <Dropdown id="gaint_source" v-model="gaintSourceItem" :options="gaintSourceItems" optionLabel="name"
-              placeholder="Select One"></Dropdown>
-          </div>
-          <div class="field col">
-            <label class="mr-1 block" for="useful_life">耐用年限</label>
-            <InputText id="useful_life" type="text" />
-          </div>
-          <div class="field col">
-            <label class="mr-1 block" for="useful_life">取得成本</label>
-            <InputText id="useful_life" type="text" v-model="editAsset.acquisition_cost" />
-          </div>
-          <div class="field col">
-            <label class="mr-1 block" for="current_value">現值</label>
-            <InputText id="current_value" type="text" />
-          </div>
+            <div class="flex m-3">
+                <div class="field">
+                    <label class="block" for="useful_life">取得成本</label>
+                    <InputNumber id="useful_life" type="text" v-model="createAssetData.acquisition_cost" :maxFractionDigits="5" />
+                </div>
+            </div>
+            <div class="flex m-3">
+                <div class="field">
+                    <label class="block" for="current_value">現值</label>
+                    <InputNumber id="current_value" type="text" v-model="createAssetData.current_value" :maxFractionDigits="5" />
+                </div>
+            </div>
         </div>
         <div class="col-12 flex flex-column md:flex-row">
           <div class="field col">

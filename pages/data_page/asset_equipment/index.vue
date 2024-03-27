@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { useAssetsStore } from "@/store/useAssetsStore"
 import useAssetAPI from "~/composables/api/useAssetAPI";
+import AssetService from "~/service/AssetService";
+import moment from 'moment';
 
 const { assetsList } = storeToRefs(useAssetsStore())
 const { setAssetsList, setCurrentAssetId } = useAssetsStore()
 const { getAssets } = useAssetAPI()
+const service = new AssetService()
 
 const loading = ref(true)
 onMounted(() => {
@@ -25,6 +28,18 @@ function deleteData(id: string) {
   console.log(id)
 }
 
+function exportExcel() {
+  service.exportAssets().then((res) => {
+    return res.blob()
+  }).then((blob) => {
+    const url = window.URL.createObjectURL(new Blob([blob]))
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('download', '資產設備基本資料.xlsx')
+    document.body.appendChild(link)
+    link.click()
+  })
+}
 
 </script>
 <template>
@@ -36,7 +51,7 @@ function deleteData(id: string) {
           <NuxtLink to="asset_equipment/create">
             <Button label="新增" class="p-button-outlined p-button-secondary mr-2 mb-2"/>
           </NuxtLink>
-          <Button label="列印" class="p-button-outlined p-button-secondary mr-2 mb-2" />
+          <Button label="列印" class="p-button-outlined p-button-secondary mr-2 mb-2" @click="exportExcel()" />
         </div>
         <DataTable :loading="loading" :value="assetsList" paginator showGridlines :rows="10" dataKey="id">
           <!-- <Column field="index" header="編號" style="min-width: 12rem">
@@ -71,7 +86,7 @@ function deleteData(id: string) {
           </Column>
           <Column field="acquire_date" header="取得日期" style="min-width: 12rem">
             <template #body="{ data }">
-              {{ data.acquisition_date }}
+              {{ moment(data).format('YYYY/MM/DD') }}
             </template>
           </Column>
           <Column field="custodian_operation" header="操作" style="min-width: 12rem">

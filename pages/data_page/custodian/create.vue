@@ -1,27 +1,33 @@
 <script setup lang="ts">
 import { object, string, date } from 'yup';
-import { DepartmentsOption } from '~/types/department';
-import useDepartmentAPI from '~/composables/api/useDepartmentAPI';
-import useCustodianAPI from '~/composables/api/useCustodianAPI';
+import { Position } from "@/types/custodian"
+import { ref } from "vue";
+import CustodianService from "~/service/CustodianService";
+import DepartmentService from "~/service/DepartmentService";
+import { useToast } from 'primevue/usetoast';
+import PositionService from '~/service/PositionService';
 
-const { createCustodian } = useCustodianAPI()
-const { getDepartmentsOptions } = useDepartmentAPI()
-let departments = ref<DepartmentsOption[]>([]);
+const service = new CustodianService()
+const departmentService = new DepartmentService()
+const positionService = new PositionService()
+let departments = ref([]);
+const toast = useToast();
+let positions = ref([]);
 
 //validate 
 const { defineField, errors, meta, values } = useForm({
-    validationSchema: object({
-        name: string().required(),
-        code: string().required(),
-        email: string().required().email(),
-        id_number: string().required(),
-        birthday: date().required(),
-        contact_number: string().required(),
-        mobile_number: string().required(),
-        address: string().required(),
-        department_id: string().required(),
-        remarks: string(),
-    }),
+  validationSchema: object({
+    name: string().required(),
+    email:string().required().email(),
+    id_number:string().required(),
+    birthday:date().required(),
+    contact_number:string().required(),
+    mobile_number:string().required(),
+    address:string().required(),
+    department_id:string().required(),
+    remarks:string(),
+    position_id:string().required()
+  }),
 })
 const [name, nameAttrs] = defineField('name')
 const [email, emailAttrs] = defineField('email')
@@ -32,19 +38,40 @@ const [mobile_number, mobile_numberAttrs] = defineField('mobile_number')
 const [address, addressAttrs] = defineField('address')
 const [department_id, departmentAttrs] = defineField('department_id')
 const [remarks, remarksAttrs] = defineField('remarks')
+const [position_id, positionAttrs] = defineField('position_id')
 
-await initDepartmentOptions()
-
-async function submitCustodian() {
-    if (!meta.value.valid) return console.log(errors.value)
-
-    const custodian = await createCustodian(values)
-    if (custodian) navigateTo('/data_page/custodian');
+function submitCustodian() {
+    console.log(values)
+    if(!meta.value.valid) return console.log(errors.value)
+    service.createCustodian(values).then((data) => {
+        if (data.exception) {
+            console.log(data.exception);
+            toast.add({ severity: 'error', summary: '新增失敗', detail: data.message, life: 3000});
+            return;
+        }
+        console.log(data);
+        navigateTo('/data_page/custodian');
+    })
 }
-async function initDepartmentOptions() {
-    const options = await getDepartmentsOptions()
-    departments.value = options
+
+function loadPostions() {
+    positionService.getPositions().then((res) => {
+        return res.json()
+    }).then((data) => {
+        positions.value = data.positions
+    })
 }
+
+function loadDepartments() {
+    departmentService.getDepartmentsOptions().then((data) => {
+        departments.value = data;
+    });
+}
+
+onMounted(() => {
+    loadDepartments();
+    loadPostions();
+})
 
 </script>
 
@@ -53,7 +80,37 @@ async function initDepartmentOptions() {
         <div class="col-12">
             <div class="card">
                 <h5>新增保管人</h5>
-                <div class="col-12">
+                <div class="flex flex-row flex-wrap flex-row md:flex-row">
+                    <div class="field col-4">
+                        <label class="mr-1 block" for="custodian_name">姓名</label>
+                        <div>
+                            <InputText id="custodian_name" :class="[errors.name ? 'p-invalid' : '']" type="text" v-model="name" v-bind="nameAttrs"/>
+                            <p>{{ errors.name ? '請填寫名稱' : '' }}</p>
+                        </div>
+                    </div>
+                    <div class="field col-4">
+                        <label class="mr-1 block" for="custodian__unit_number">身分證字號</label>
+                        <div>
+                            <InputText id="custodian__unit_number" :class="[errors.id_number ? 'p-invalid' : '']" type="text" v-model="id_number" v-bind="id_numberAttrs"/>
+                            <p>{{ errors.id_number? '請填寫身分證字號' : '' }}</p>
+                        </div>
+                    </div>
+                    <div class="field col-4">
+                        <label class="mr-1 block" for="custodian__birth_date">生日</label>
+                        <div>
+                            <Calendar id="custodian__birth_date" :class="[errors.birthday ? 'p-invalid' : '']" type="text" v-model="birthday" v-bind="birthdayAttrs" date-format="yy/mm/dd"/>
+                            <p>{{ errors.birthday ? '請選擇日期' : '' }}</p>
+                        </div>
+                    </div>
+                </div>
+                 <div class="flex flex-row flex-wrap flex-row md:flex-row">
+                    <div class="field col-4">
+                        <label class="mr-1 block" for="custodian_phone">連絡電話</label>
+                        <div>
+                            <InputText id="custodian_phone" :class="[errors.contact_number ? 'p-invalid' : '']" type="text" v-model="contact_number" v-bind="contact_numberAttrs"/>
+                            <p>{{ errors.contact_number ? '請填寫連絡電話' : '' }}</p>
+                        </div>
+                    </div>
                     <div class="field col">
                         <label class="mr-1 block" for="custodian_id">保管人代號</label>
                         <div>
@@ -62,40 +119,52 @@ async function initDepartmentOptions() {
                             <p>{{ errors.code ? '請填寫代號' : '' }}</p>
                         </div>
                     </div>
-            </div>
-            <div class="col-12 flex flex-column md:flex-row">
-                <div class="field col-4">
-                    <label class="mr-1 block" for="custodian_name">姓名</label>
-                    <div>
-                        <InputText id="custodian_name" :class="[errors.name ? 'p-invalid' : '']" type="text"
-                            v-model="name" v-bind="nameAttrs" />
-                        <p>{{ errors.name ? '請填寫名稱' : '' }}</p>
+                </div>
+                <div class="flex flex-row flex-wrap flex-row md:flex-row">
+                    <div class="field col-4">
+                        <div class="field">
+                            <label class="block" for="department">部門群組</label>
+                            <div>
+                                <Dropdown id="department" :class="[errors.department_id ? 'p-invalid' : '']" v-model="department_id" v-bind="departmentAttrs" :options="departments" optionLabel="name" optionValue="id"></Dropdown>
+                                <p>{{ errors.department_id ? '請選擇所屬的部門群組' : '' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field col-4">
+                        <div class="field">
+                            <label class="block" for="position">職務</label>
+                            <div>
+                                <Dropdown id="position" :class="[errors.position_id ? 'p-invalid' : '']" v-model="position_id" v-bind="positionAttrs" :options="positions" optionLabel="name" optionValue="id"></Dropdown>
+                                <p>{{ errors.position_id ? '請選擇職務' : '' }}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="field col-4">
-                    <label class="mr-1 block" for="custodian__unit_number">身分證字號</label>
-                    <div>
-                        <InputText id="custodian__unit_number" :class="[errors.id_number ? 'p-invalid' : '']"
-                            type="text" v-model="id_number" v-bind="id_numberAttrs" />
-                        <p>{{ errors.id_number ? '請填寫身分證字號' : '' }}</p>
+                <div class="flex flex-row flex-wrap flex-row md:flex-row">
+                    <div class="field col">
+                        <label class="mr-1 block" for="custodian_email">電子郵件</label>
+                        <div>
+                            <InputText id="custodian_email" :class="[errors.email ? 'p-invalid' : '']" type="text" v-model="email" v-bind="emailAttrs"/>
+                            <p>{{ errors.email ? '請填寫正確的信箱格式' : '' }}</p>
+                        </div>
                     </div>
                 </div>
-                <div class="field col-4">
-                    <label class="mr-1 block" for="custodian__birth_date">生日</label>
-                    <div>
-                        <Calendar id="custodian__birth_date" :class="[errors.birthday ? 'p-invalid' : '']" type="text"
-                            v-model="birthday" v-bind="birthdayAttrs" />
-                        <p>{{ errors.birthday ? '請選擇日期' : '' }}</p>
+                <div class="flex flex-row flex-wrap flex-row md:flex-row">
+                    <div class="field col-12">
+                        <label class="mr-1 block" for="custodian__address">通訊地址</label>
+                        <div>
+                            <InputText id="custodian_address" :class="[errors.address ? 'p-invalid' : '']" type="text" v-model="address" v-bind="addressAttrs"/>
+                            <p>{{ errors.address ? '請填信箱' : '' }}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-12 flex flex-column md:flex-row">
-                <div class="field col-4">
-                    <label class="mr-1 block" for="custodian_phone">連絡電話</label>
-                    <div>
-                        <InputText id="custodian_phone" :class="[errors.contact_number ? 'p-invalid' : '']" type="text"
-                            v-model="contact_number" v-bind="contact_numberAttrs" />
-                        <p>{{ errors.contact_number ? '請填寫連絡電話' : '' }}</p>
+                <div class="flex flex-row flex-wrap flex-row md:flex-row">
+                    <div class="field col-12">
+                        <label class="mr-1 block" for="custodian_memo">備註說明</label>
+                        <div>
+                            <InputText id="custodian_memo" :class="[errors.remarks ? 'p-invalid' : '']" type="text" v-model="remarks" v-bind="remarksAttrs"/>
+                            <p>{{ errors.remarks ? '請填備註' : '' }}</p>
+                        </div>
                     </div>
                 </div>
                 <div class="field col">
@@ -155,6 +224,5 @@ async function initDepartmentOptions() {
                 </NuxtLink>
             </div>
         </div>
-    </div>
     </div>
 </template>

@@ -3,12 +3,12 @@ import { object, string, date } from 'yup';
 import { useCustodianStore } from "@/store/useCustodianStore"
 import useCustodianAPI from '~/composables/api/useCustodianAPI';
 import { useToast } from 'primevue/usetoast';
-import useDepartmentAPI from '~/composables/api/useDepartmentAPI';
-import { DepartmentsOption } from '~/types/department';
+import DepartmentService from '~/service/DepartmentService';
+import PositionService from '~/service/PositionService';
 
 const { custodian,currentCustianId  } = storeToRefs(useCustodianStore())
 const { updateCustodian } = useCustodianAPI()
-const { getDepartmentsOptions } = useDepartmentAPI()
+
 const toast = useToast()
 //validate 
 const { defineField, errors, meta, values, setValues } = useForm({
@@ -21,9 +21,9 @@ const { defineField, errors, meta, values, setValues } = useForm({
     contact_number:string().required(),
     mobile_number:string().required(),
     address:string().required(),
-    // department:string().required(),
-    remarks:string(),
-    // position:string().required()
+    department_id: string().required(),
+    remarks:string().nullable(),
+    position_id:string().required()
   }),
 })
 const [code, codeAttrs] = defineField('code')
@@ -34,15 +34,31 @@ const [birthday, birthdayAttrs] = defineField('birthday')
 const [contact_number, contact_numberAttrs] = defineField('contact_number')
 const [mobile_number, mobile_numberAttrs] = defineField('mobile_number')
 const [address, addressAttrs] = defineField('address')
-// const [department, departmentAttrs] = defineField('department')
 const [remarks, remarksAttrs] = defineField('remarks')
-// const [position, positionAttrs] = defineField('position')
+const [position_id, positionAttrs] = defineField('position_id')
 const [department_id, departmentAttrs] = defineField('department_id')
 
-let departments = ref<DepartmentsOption[]>([])
+const departmentService = new DepartmentService()
+const positionService = new PositionService()
+let departments = ref([])
+let positions = ref([])
+
+function loadPostions() {
+  positionService.getPositions().then(res => {
+    return res.json()
+  }).then((data) => {
+    positions.value = data.positions
+  })
+}
 
 onMounted(()=>{
   init()
+  departmentService.getDepartmentsOptions()
+    .then(data => {
+      departments.value = data;
+      console.log(data);
+    })
+    loadPostions()
 })
 //初始化
 async function init(){
@@ -61,6 +77,7 @@ async function initCustodianInputData(){
     address:custodian.value.address,
     remarks:custodian.value.remarks,
     department_id: custodian.value.department_id,
+    position_id: custodian.value.position_id,
   })
 }
 async function initDepartmentOptions(){
@@ -80,7 +97,8 @@ async function fetchUpdateCustodianData(){
     mobile_number,
     address,
     remarks,
-    department_id
+    department_id,
+    position_id,
   })
   toast.add({ severity: "success", summary: "更新成功", detail: `您已更新代號 : ${currentCustianId.value}的相關資料`, life: 3000 })
   navigateTo('/data_page/custodian')
@@ -159,11 +177,11 @@ async function fetchUpdateCustodianData(){
             </div>
           </div>
           <div class="field col-12 md:col-3">
-            <label class="block" for="state">職務名稱</label>
+            <label class="block" for="position">職務名稱</label>
             <div>
-              <Dropdown disabled id="state" :class="[errors.position ? 'p-invalid' : '']" v-model="position"
-                v-bind="positionAttrs" :options="positionItems" optionLabel="name" placeholder="Select One"></Dropdown>
-              <p>{{ errors.position ? '請選擇職務名稱' : '' }}</p>
+              <Dropdown id="position" :class="[errors.position_id ? 'p-invalid' : '']" v-model="position_id"
+                v-bind="positionAttrs" :options="positions" optionLabel="name" optionValue="id"></Dropdown>
+              <p>{{ errors.position_id ? '請選擇職務名稱' : '' }}</p>
             </div>
           </div>
         </div>

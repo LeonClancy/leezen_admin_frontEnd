@@ -20,7 +20,7 @@ let newDepartmentParent = ref(null)
 const { defineField, values, errors, meta, resetForm } = useForm({
   validationSchema: object({
     name: string().required(),
-    code: string().required()
+    code: string().required(),
   }),
 })
 const [name, nameAttrs] = defineField('name')

@@ -15,7 +15,7 @@ export default class AssetService {
     }
 
     async createAsset(asset) {
-        const response = await fetch(`${this.apiBaseUrl}/assets`, {
+        return await fetch(`${this.apiBaseUrl}/assets`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -24,7 +24,6 @@ export default class AssetService {
             },
             body: JSON.stringify(asset)
         })
-        return await response.json()
     }
 
     async getAsset(assetId) {
@@ -62,5 +61,15 @@ export default class AssetService {
             }
         })
         return await response.json()
+    }
+
+    async exportAssets() {
+        return fetch(`${this.apiBaseUrl}/assets/export/excel`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
+        })
     }
 }

@@ -33,6 +33,11 @@ const model = ref([
                         label: '資產類型管理',
                         icon: 'pi pi-circle-fill',
                         to: '/data_page/category'
+                    },
+                    {
+                        label: '保管人職位管理',
+                        icon: 'pi pi-circle-fill',
+                        to: '/data_page/custodian_position',
                     }
                 ]
             }

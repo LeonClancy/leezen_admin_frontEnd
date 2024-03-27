@@ -4,11 +4,14 @@ import CustodianService from '~/service/CustodianService';
 import CategoryService from '~/service/CategoryService';
 import useAssetAPI from '~/composables/api/useAssetAPI';
 import { CreateAssetRequest } from '~/types/assets';
+import { useToast } from 'primevue/usetoast';
 
 let departmentService = new DepartmentService();
 let custodianService = new CustodianService();
 let categorieService = new CategoryService();
 const { createAsset } = useAssetAPI()
+
+const toast = useToast();
 
 let departments = ref([]);
 let custodians = ref([]);
@@ -64,9 +67,6 @@ onMounted(() => {
         <div class="col-12">
             <div class="card">
                 <h5>新增資產設備</h5>
-                <div class="col-12 flex justify-content-end">
-                    <Button label="列印" class="p-button-outlined p-button-secondary mr-2 mb-2" />
-                </div>
                 <div class="col-12 flex flex-column md:flex-row">
                     <div class="field col-4">
                         <label class="mr-1 block" for="asset_id">資產編號</label>
@@ -91,44 +91,64 @@ onMounted(() => {
                         <InputText id="asset_product_code" type="text" v-model="createAssetData.product_serial_number" />
                     </div>
                 </div>
-                <div class="col-12 flex flex-column md:flex-row">
-                    <div class="field col">
-                        <label class="mr-1 block" for="asset_get_day">取得日期</label>
-                        <Calendar id="asset_get_day" type="text" v-model="createAssetData.acquisition_date" />
+                <div class="flex flex-row flex-wrap flex-row md:flex-row">
+                    <div class="flex m-3">
+                        <div class="field">
+                            <label class="block" for="asset_get_day">取得日期</label>
+                            <Calendar id="asset_get_day" type="text" v-model="createAssetData.acquisition_date" date-format="yy/mm/dd"/>
+                        </div>
                     </div>
-                    <div class="field col">
-                        <label class="mr-1 block" for="asset_">取得來源</label>
-                        <InputText id="asset_get_day" type="text" v-model="createAssetData.acquisition_source" />
+                    <div class="flex m-3">
+                        <div class="field">
+                            <label class="block" for="asset_">取得來源</label>
+                            <InputText id="asset_get_day" type="text" v-model="createAssetData.acquisition_source" />
+                        </div>
                     </div>
-                    <div class="field col">
-                        <label class="mr-1 block" for="useful_life">耐用年限</label>
-                        <InputNumber id="useful_life" type="text" v-model="createAssetData.useful_life_years" />
+                    <div class="flex m-3">
+                        <div class="field">
+                            <label class="block" for="useful_life">耐用年限</label>
+                            <InputNumber id="useful_life" type="text" v-model="createAssetData.useful_life_years" />
+                        </div>
                     </div>
-                    <div class="field col">
-                        <label class="mr-1 block" for="useful_life">取得成本</label>
-                        <InputNumber id="useful_life" type="text" v-model="createAssetData.acquisition_cost" :minFractionDigits="2" :maxFractionDigits="5" />
+                    <div class="flex m-3">
+                        <div class="field">
+                            <label class="block" for="useful_life">取得成本</label>
+                            <InputNumber id="useful_life" type="text" v-model="createAssetData.acquisition_cost" :maxFractionDigits="5" />
+                        </div>
                     </div>
-                    <div class="field col">
-                        <label class="mr-1 block" for="current_value">現值</label>
-                        <InputNumber id="current_value" type="text" v-model="createAssetData.current_value" :minFractionDigits="2" :maxFractionDigits="5" />
+                    <div class="flex m-3">
+                        <div class="field">
+                            <label class="block" for="current_value">現值</label>
+                            <InputNumber id="current_value" type="text" v-model="createAssetData.current_value" :maxFractionDigits="5" />
+                        </div>
                     </div>
                 </div>
-                <div class="col-12 flex flex-column md:flex-row">
-                    <div class="field col-3">
-                        <label class="mr-1 block" for="department">部門群組</label>
-                        <Dropdown id="department" v-model="createAssetData.department_id" :options="departments" optionValue="id" optionLabel="name" />
+                <div class="flex flex-row flex-wrap flex-row md:flex-row">
+                    <div class="flex m-3">
+                        <div class="field">
+                            <label class="block" for="department">部門群組</label>
+                            <Dropdown class="w-full md:w-16rem" id="department" 
+                                v-model="createAssetData.department_id" 
+                                :options="departments" 
+                                optionValue="id" 
+                                optionLabel="name" />
+                        </div>
                     </div>
-                    <div class="field col-3">
-                        <label class="mr-1 block" for="custodian_id">保管人編號</label>
-                        <Dropdown id="custodian_id" v-model="createAssetData.custodian_id" :options="custodians" optionValue="id" optionLabel="name" />
+                    <div class="flex m-3">
+                        <div class="field">
+                            <label class="block" for="custodian_id">保管人編號</label>
+                            <Dropdown class="w-full md:w-16rem" id="custodian_id" 
+                                v-model="createAssetData.custodian_id" 
+                                :options="custodians" 
+                                optionValue="id" 
+                                optionLabel="name" />
+                        </div>
                     </div>
-                    <div class="field col-3">
-                        <label class="mr-1 block" for="category">類型</label>
-                        <Dropdown id="category" v-model="createAssetData.category_id" :options="categories" optionValue="id" optionLabel="name" />
-                    </div>
-                    <div class="field col-3">
-                        <label class="mr-1 block" for="position">職務名稱</label>
-                        <InputText id="position" type="text" />
+                    <div class="flex m-3">
+                        <div class="field">
+                            <label class="block" for="category">類型</label>
+                            <Dropdown class="w-full md:w-16rem" id="category" v-model="createAssetData.category_id" :options="categories" optionValue="id" optionLabel="name" />
+                        </div>
                     </div>
                 </div>
                 <div class="col-12 flex flex-column md:flex-row">
@@ -148,15 +168,8 @@ onMounted(() => {
                 <div class="col-12 flex flex-column md:flex-row">
                     <div class="field col">
                         <label class="mr-1 block" for="warranty_period">保固年限</label>
-                        <Calendar id="warranty_period" type="text" v-model="createAssetData.warranty_period" />
+                        <Calendar id="warranty_period" type="text" v-model="createAssetData.warranty_period" date-format="yy/mm/dd" />
                     </div>
-                </div>
-                <div class="col-12 flex justify-content-end">
-                    <!-- 這三個在新增的時候應該不需要吧?!要的話再打開註解即可 -->
-                    <!-- <Button label="顯示歷史保管人明細" class="p-button-rounded mr-2 mb-2 col-2" />
-                    <Button label="顯示資產設備維修紀錄" class="p-button-rounded mr-2 mb-2 col-2" />
-                    <Button label="顯示資產設備折舊狀況" class="p-button-rounded mr-2 mb-2 col-2" /> -->
-                    <Button label="上傳照片" icon="pi pi-bookmark" class="mr-2 mb-2"></Button>
                 </div>
                 <div class="col-12 flex justify-content-end">
                     <Button label="確認" class="mr-2 mb-2" @click="submitAsset"></Button>
