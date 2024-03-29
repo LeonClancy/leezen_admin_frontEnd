@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { object, string, date } from 'yup';
 import { Position } from "@/types/custodian"
 import { ref } from "vue";
@@ -6,10 +6,12 @@ import CustodianService from "~/service/CustodianService";
 import DepartmentService from "~/service/DepartmentService";
 import { useToast } from 'primevue/usetoast';
 import PositionService from '~/service/PositionService';
+import StatusService from '~/service/StatusService';
 
 const service = new CustodianService()
 const departmentService = new DepartmentService()
 const positionService = new PositionService()
+const statusService = new StatusService()
 let departments = ref([]);
 const toast = useToast();
 let positions = ref([]);
@@ -26,7 +28,8 @@ const { defineField, errors, meta, values } = useForm({
     address:string().required(),
     department_id:string().required(),
     remarks:string(),
-    position_id:string().required()
+    position_id:string().required(),
+    status:string().required()
   }),
 })
 const [name, nameAttrs] = defineField('name')
@@ -39,6 +42,7 @@ const [address, addressAttrs] = defineField('address')
 const [department_id, departmentAttrs] = defineField('department_id')
 const [remarks, remarksAttrs] = defineField('remarks')
 const [position_id, positionAttrs] = defineField('position_id')
+const [status, statusAttrs] = defineField('status')
 
 function submitCustodian() {
     console.log(values)
@@ -68,9 +72,19 @@ function loadDepartments() {
     });
 }
 
+let statuses = ref();
+function loadStatus() {
+    statusService.getStatus().then((res) => {
+        return res.json()
+    }).then((data) => {
+        statuses.value = data.status
+    })
+}
+
 onMounted(() => {
     loadDepartments();
     loadPostions();
+    loadStatus();
 })
 
 </script>
@@ -111,14 +125,6 @@ onMounted(() => {
                             <p>{{ errors.contact_number ? '請填寫連絡電話' : '' }}</p>
                         </div>
                     </div>
-                    <div class="field col">
-                        <label class="mr-1 block" for="custodian_id">保管人代號</label>
-                        <div>
-                            <InputText id="custodian_id" :class="[errors.code ? 'p-invalid' : '']" type="text"
-                                v-model="code" v-bind="codeAttrs" />
-                            <p>{{ errors.code ? '請填寫代號' : '' }}</p>
-                        </div>
-                    </div>
                 </div>
                 <div class="flex flex-row flex-wrap flex-row md:flex-row">
                     <div class="field col-4">
@@ -136,6 +142,15 @@ onMounted(() => {
                             <div>
                                 <Dropdown id="position" :class="[errors.position_id ? 'p-invalid' : '']" v-model="position_id" v-bind="positionAttrs" :options="positions" optionLabel="name" optionValue="id"></Dropdown>
                                 <p>{{ errors.position_id ? '請選擇職務' : '' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field col-4">
+                        <div class="field">
+                            <label class="block" for="position">狀態</label>
+                            <div>
+                                <Dropdown id="position" :class="[errors.status ? 'p-invalid' : '']" v-model="status" v-bind="statusAttrs" :options="statuses" optionLabel="name" optionValue="id"></Dropdown>
+                                <p>{{ errors.status ? '請選擇狀態' : '' }}</p>
                             </div>
                         </div>
                     </div>
@@ -173,47 +188,6 @@ onMounted(() => {
                         <InputText id="custodian_mobile_number" :class="[errors.mobile_number ? 'p-invalid' : '']"
                             type="text" v-model="mobile_number" v-bind="mobile_numberAttrs" />
                         <p>{{ errors.mobile_number ? '請填寫行動電話' : '' }}</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 flex flex-column md:flex-row">
-                <div class="field col">
-                    <label class="block" for="department">部門群組</label>
-                    <div>
-                        <Dropdown id="department" :class="[errors.department ? 'p-invalid' : '']"
-                            v-model="department_id" v-bind="departmentAttrs" :options="departments" optionLabel="name"
-                            optionValue="id"></Dropdown>
-                        <p>{{ errors.department ? '請選擇所屬的部門群組' : '' }}</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 flex flex-column md:flex-row">
-                <div class="field col">
-                    <label class="mr-1 block" for="custodian_email">電子郵件</label>
-                    <div>
-                        <InputText id="custodian_email" :class="[errors.email ? 'p-invalid' : '']" type="text"
-                            v-model="email" v-bind="emailAttrs" />
-                        <p>{{ errors.email ? '請填寫正確的信箱格式' : '' }}</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 flex flex-column md:flex-row">
-                <div class="field col-12">
-                    <label class="mr-1 block" for="custodian__address">通訊地址</label>
-                    <div>
-                        <InputText id="custodian_address" :class="[errors.address ? 'p-invalid' : '']" type="text"
-                            v-model="address" v-bind="addressAttrs" />
-                        <p>{{ errors.address ? '請填信箱' : '' }}</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 flex flex-column md:flex-row">
-                <div class="field col-12">
-                    <label class="mr-1 block" for="custodian_memo">備註說明</label>
-                    <div>
-                        <InputText id="custodian_memo" :class="[errors.remarks ? 'p-invalid' : '']" type="text"
-                            v-model="remarks" v-bind="remarksAttrs" />
-                        <p>{{ errors.remarks ? '請填備註' : '' }}</p>
                     </div>
                 </div>
             </div>

@@ -6,6 +6,8 @@ export default () => {
     const { authToken } = storeToRefs(useAuthStore());
 
     async function fetchApiBase(url: string, method: 'post' | 'get' | 'delete' | 'patch' | 'put', body?: any): Promise<any> {
+        console.log(method, url, body);
+        
         const { data, error } = await useFetch(url, {
             headers: {
                 Authorization: `Bearer ${authToken.value}`

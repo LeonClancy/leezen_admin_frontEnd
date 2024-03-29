@@ -24,10 +24,11 @@ export declare interface CustodianCreateRequest{
     remarks: string | null;
     address: string; 
     department_id: string | number;
+    position_id: string | number;
+    status: string | number;
 }
 export declare interface CustodianUpdateRequest {
     id: string | number;
-    code: string;
     id_number: string;
     name: string;
     email: string;
@@ -37,6 +38,8 @@ export declare interface CustodianUpdateRequest {
     remarks: string | null;
     address: string;
     department_id: string | number;
+    position_id: string | number;
+    status: string | number;
 }
 export declare interface CustodianDeleteRequest {
     id: string | number;

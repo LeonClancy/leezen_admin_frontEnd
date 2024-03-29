@@ -38,103 +38,13 @@ const model = ref([
                         label: '保管人職位管理',
                         icon: 'pi pi-circle-fill',
                         to: '/data_page/custodian_position',
+                    },
+                    {
+                        label: '保管人狀態管理',
+                        icon: 'pi pi-circle-fill',
+                        to: '/data_page/custodian_status',
                     }
                 ]
-            }
-        ]
-    },
-    {
-        label: '',
-        items: [
-            {
-                label: '一般查詢',
-                icon: 'pi pi-search',
-                items: [
-                    {
-                        label: '保管人進階資料',
-                        icon: 'pi pi-circle-fill',
-                        to: '/search_base/custodian'
-                    },
-                    {
-                        label: '資產設備進階資料',
-                        icon: 'pi pi-circle-fill',
-                        to: '/search_base/asset_equipment'
-                    },
-                ]
-            }
-        ]
-    },
-    {
-        label: '',
-        items: [
-            {
-                label: '各式報表查詢',
-                icon: 'pi pi-chart-bar',
-                items: [
-                    {
-                        label: '資產設備',
-                        icon: 'pi pi-circle-fill',
-                        to: '/search_report/asset_equipment'
-                    },
-                ]
-            }
-        ]
-    },
-    {
-        label: '',
-        items: [
-            {
-                label: '標籤列印',
-                icon: 'pi pi-print',
-                items: [
-                    {
-                        label: '資產設備一般標籤列印A4雷射/噴墨(3x7)',
-                        icon: 'pi pi-circle-fill',
-                        to: '/print_label/asset_equipment_print_type1'
-                    },
-                ]
-            }
-        ]
-    },
-    {
-        label: '',
-        items: [
-            {
-                label: '盤點功能',
-                icon: 'pi pi-check-square',
-                items: [
-                    {
-                        label: '連續單筆資產及時盤點',
-                        icon: 'pi pi-circle-fill',
-                        to: '/check/asset_continuous_single_check'
-                    },
-                ]
-            }
-        ]
-    },
-    {
-        label: '',
-        items: [
-            {
-                label: '系統維護功能',
-                icon: 'pi pi-cog',
-                items: [
-                    {
-                        label: '設定登錄者密碼與權限',
-                        icon: 'pi pi-circle-fill',
-                        to: '/maintain_system/login_password_authority'
-                    },
-                ]
-            }
-        ]
-    },
-    {
-        label: '',
-        items: [
-            {
-                label: '關於本軟體與更新',
-                icon: 'pi pi-exclamation-circle',
-                to: '/about'
             }
         ]
     },

@@ -5,6 +5,7 @@ import useCustodianAPI from '~/composables/api/useCustodianAPI';
 import { useToast } from 'primevue/usetoast';
 import DepartmentService from '~/service/DepartmentService';
 import PositionService from '~/service/PositionService';
+import StatusService from '~/service/StatusService';
 
 const { custodian,currentCustianId  } = storeToRefs(useCustodianStore())
 const { updateCustodian } = useCustodianAPI()
@@ -23,7 +24,8 @@ const { defineField, errors, meta, values, setValues } = useForm({
     address:string().required(),
     department_id: string().required(),
     remarks:string().nullable(),
-    position_id:string().required()
+    position_id:string().required(),
+    status:string().required()
   }),
 })
 const [code, codeAttrs] = defineField('code')
@@ -37,17 +39,28 @@ const [address, addressAttrs] = defineField('address')
 const [remarks, remarksAttrs] = defineField('remarks')
 const [position_id, positionAttrs] = defineField('position_id')
 const [department_id, departmentAttrs] = defineField('department_id')
+const [status, statusAttrs] = defineField('status')
 
 const departmentService = new DepartmentService()
 const positionService = new PositionService()
+const statusService = new StatusService()
 let departments = ref([])
 let positions = ref([])
+let statuses = ref([])
 
 function loadPostions() {
   positionService.getPositions().then(res => {
     return res.json()
   }).then((data) => {
     positions.value = data.positions
+  })
+}
+
+function loadStatuses() {
+  statusService.getStatus().then(res => {
+    return res.json()
+  }).then((data) => {
+    statuses.value = data.status
   })
 }
 
@@ -58,7 +71,8 @@ onMounted(()=>{
       departments.value = data;
       console.log(data);
     })
-    loadPostions()
+  loadPostions()
+  loadStatuses()
 })
 //初始化
 async function init(){
@@ -78,6 +92,7 @@ async function initCustodianInputData(){
     remarks:custodian.value.remarks,
     department_id: custodian.value.department_id,
     position_id: custodian.value.position_id,
+    status: custodian.value.status,
   })
 }
 async function initDepartmentOptions(){
@@ -88,17 +103,17 @@ async function fetchUpdateCustodianData(){
   if(!meta.value.valid) return
   await updateCustodian({
     id:currentCustianId.value,
-    code,
-    name,
-    email,
-    id_number,
-    birthday,
-    contact_number,
-    mobile_number,
-    address,
-    remarks,
-    department_id,
-    position_id,
+    name:name.value,
+    email:email.value,
+    id_number:id_number.value,
+    birthday:birthday.value,
+    contact_number:contact_number.value,
+    mobile_number:mobile_number.value,
+    address:address.value,
+    remarks:remarks.value,
+    department_id: department_id.value,
+    position_id: position_id.value,
+    status: status.value,
   })
   toast.add({ severity: "success", summary: "更新成功", detail: `您已更新代號 : ${currentCustianId.value}的相關資料`, life: 3000 })
   navigateTo('/data_page/custodian')
@@ -176,12 +191,20 @@ async function fetchUpdateCustodianData(){
               <p>{{ errors.department ? '請選擇所屬的部門群組' : '' }}</p>
             </div>
           </div>
-          <div class="field col-12 md:col-3">
+          <div class="field col-4 md:col-3">
             <label class="block" for="position">職務名稱</label>
             <div>
               <Dropdown id="position" :class="[errors.position_id ? 'p-invalid' : '']" v-model="position_id"
                 v-bind="positionAttrs" :options="positions" optionLabel="name" optionValue="id"></Dropdown>
               <p>{{ errors.position_id ? '請選擇職務名稱' : '' }}</p>
+            </div>
+          </div>
+          <div class="field col-4 md:col-3">
+            <label class="block" for="position">狀態</label>
+            <div>
+              <Dropdown id="status" :class="[errors.status ? 'p-invalid' : '']" v-model="status"
+                v-bind="statusAttrs" :options="statuses" optionLabel="name" optionValue="id"></Dropdown>
+              <p>{{ errors.status ? '請選擇職務名稱' : '' }}</p>
             </div>
           </div>
         </div>
