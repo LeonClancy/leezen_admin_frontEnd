@@ -18,7 +18,7 @@ let custodians = ref([]);
 let categories = ref([]);
 
 const createAssetData = ref<CreateAssetRequest>({
-    asset_number:'',
+    // asset_number:'',
     name:'',
     brand_model:'',
     specifications_detail:'',
@@ -68,10 +68,10 @@ onMounted(() => {
             <div class="card">
                 <h5>新增資產設備</h5>
                 <div class="col-12 flex flex-column md:flex-row">
-                    <div class="field col-4">
+                    <!-- <div class="field col-4">
                         <label class="mr-1 block" for="asset_id">資產編號</label>
                         <InputText id="asset_id" type="text" v-model="createAssetData.asset_number" />
-                    </div>
+                    </div> -->
                     <div class="field col-4">
                         <label class="mr-1 block" for="asset_name">資產名稱</label>
                         <InputText id="asset_name" type="text" v-model="createAssetData.name" />

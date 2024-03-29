@@ -1,4 +1,5 @@
 export declare interface Asset {
+    code: string;
     id: string;
     name: string;
     type: string;
@@ -10,7 +11,7 @@ export declare interface CreateAssetRequest {
     acquisition_cost: number;
     acquisition_date: string;
     acquisition_source: string;
-    asset_number: string;
+    // asset_number: string;
     brand_model: string;
     category_id: number;
     contact_person: string;
@@ -29,7 +30,7 @@ export declare interface UpdateAssetRequest {
     acquisition_cost: number;
     acquisition_date: string;
     acquisition_source: string;
-    asset_number: string;
+    // asset_number: string;
     brand_model: string;
     category_id: number;
     contact_person: string;

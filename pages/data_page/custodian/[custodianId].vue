@@ -81,7 +81,7 @@ async function initCustodianInputData(){
   })
 }
 async function initDepartmentOptions(){
-  const options = await getDepartmentsOptions()
+  const options = await departmentService.getDepartmentsOptions()
   departments.value = options
 }
 async function fetchUpdateCustodianData(){
