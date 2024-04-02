@@ -62,8 +62,8 @@ async function fetchUpdateCustodianData() {
   if(!meta.value.valid) return
   await updateDepartment({
     id:currentDepartment.value.id,
-    code,
-    name,
+    code: code.value,
+    name: name.value,
   })
   toast.add({ severity: "success", summary: "更新成功", detail: `您已更新代號 : ${currentDepartment.value.id}的相關資料`, life: 3000 })
   navigateTo('/data_page/department_group')

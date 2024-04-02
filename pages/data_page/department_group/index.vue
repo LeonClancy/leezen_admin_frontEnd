@@ -127,7 +127,7 @@ function viewData(department:Department){
                 <Button @click="viewData(slotProps.node.data)" severity="success" icon="pi pi-pencil" type="button" rounded/>
                 <Button @click="addDepartment(slotProps.node.data)" type="button" icon="pi pi-plus" rounded
                   v-if="slotProps.node.data.depth < 2" />
-                <Button @click="confirmDeleteData(slotProps.node.data.id)" icon="pi pi-minus" severity="danger" rounded></Button>
+                <!-- <Button @click="confirmDeleteData(slotProps.node.data.id)" icon="pi pi-minus" severity="danger" rounded></Button> -->
                 <!-- <Button @click="editData(slotProps.node.data.id)" type="button" icon="pi pi-pencil" rounded severity="success" /> -->
               </div>
             </template>

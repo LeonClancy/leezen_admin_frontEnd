@@ -15,7 +15,6 @@ const toast = useToast()
 const { defineField, errors, meta, values, setValues } = useForm({
   validationSchema: object({
     name: string().required(),
-    code: string().required(),
     email:string().required().email(),
     id_number:string().required(),
     birthday:date().required(),
@@ -28,7 +27,6 @@ const { defineField, errors, meta, values, setValues } = useForm({
     status:string().required()
   }),
 })
-const [code, codeAttrs] = defineField('code')
 const [name, nameAttrs] = defineField('name')
 const [email, emailAttrs] = defineField('email')
 const [id_number, id_numberAttrs] = defineField('id_number')
@@ -81,7 +79,6 @@ async function init(){
 }
 async function initCustodianInputData(){
   setValues({
-    code:custodian.value.code,
     name:custodian.value.name,
     email:custodian.value.email,
     id_number:custodian.value.id_number,
@@ -127,16 +124,6 @@ async function fetchUpdateCustodianData(){
         <h5>保管人詳細資訊</h5>
         <div class="col-12 flex justify-content-end">
           <Button label="列印" class="p-button-outlined p-button-secondary mr-2 mb-2" />
-        </div>
-        <div class="col-12">
-          <div class="field col">
-            <label class="mr-1 block" for="custodian_id">保管人代號</label>
-            <div>
-              <InputText id="custodian_id" :class="[errors.code ? 'p-invalid' : '']" type="text" v-model="code"
-                v-bind="codeAttrs" />
-              <p>{{ errors.code ? '請填寫代號' : '' }}</p>
-            </div>
-          </div>
         </div>
         <div class="col-12 flex flex-column md:flex-row">
           <div class="field col-4">

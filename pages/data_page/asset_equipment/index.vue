@@ -84,9 +84,9 @@ function exportExcel() {
               {{ data.product_serial_number }}
             </template>
           </Column>
-          <Column field="acquire_date" header="取得日期" style="min-width: 12rem">
+          <Column field="acquisition_date" header="取得日期" style="min-width: 12rem">
             <template #body="{ data }">
-              {{ moment(data).format('YYYY/MM/DD') }}
+              {{ moment(data.acquisition_date).format('YYYY/MM/DD') }}
             </template>
           </Column>
           <Column field="custodian_operation" header="操作" style="min-width: 12rem">

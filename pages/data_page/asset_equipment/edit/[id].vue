@@ -22,7 +22,6 @@ const route = useRoute();
 const toast = useToast();
 
 const createAssetData = ref({
-    asset_number:'',
     name:'',
     brand_model:'',
     specifications_detail:'',
@@ -90,10 +89,6 @@ function loadCategories() {
             <div class="card">
                 <h5>編輯資產設備</h5>
                 <div class="col-12 flex flex-column md:flex-row">
-                    <div class="field col-4">
-                        <label class="mr-1 block" for="asset_id">資產編號</label>
-                        <InputText id="asset_id" type="text" v-model="createAssetData.asset_number" />
-                    </div>
                     <div class="field col-4">
                         <label class="mr-1 block" for="asset_name">資產名稱</label>
                         <InputText id="asset_name" type="text" v-model="createAssetData.name" />
