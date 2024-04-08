@@ -22,7 +22,7 @@ async function fetchLogin() {
     if (token) {
         window.localStorage.setItem('token', token)
         setAuthToken( token )
-        navigateTo('/')
+        navigateTo('/data_page/asset_equipment')
     }
 }
 </script>
