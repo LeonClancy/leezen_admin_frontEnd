@@ -1,4 +1,5 @@
 <script setup>
+navigateTo('/data_page/asset_equipment')
 import { ProductService } from '@/service/ProductService';
 
 const { isDarkTheme } = useLayout();

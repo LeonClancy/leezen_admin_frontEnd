@@ -8,6 +8,7 @@ import CategoryService from '~/service/CategoryService';
 import AcquisitionSourceService from '~/service/AcquisitionSourceService';
 import useAssetAPI from '~/composables/api/useAssetAPI';
 import { useAssetsStore } from '~/store/useAssetsStore';
+import moment from 'moment';
 
 let departmentService = new DepartmentService();
 let custodianService = new CustodianService();
@@ -57,6 +58,8 @@ function init(){
     loadSources();
 }
 async function fetchAssets(){
+    asset.value.acquisition_date = moment(asset.value.acquisition_date).format('YYYY/MM/DD')
+    asset.value.warranty_period = moment(asset.value.warranty_period).format('YYYY/MM/DD')
     createAssetData.value = asset.value
 }
 async function submitAsset() {
