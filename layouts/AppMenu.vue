@@ -43,6 +43,11 @@ const model = ref([
                         label: '保管人狀態管理',
                         icon: 'pi pi-circle-fill',
                         to: '/data_page/custodian_status',
+                    },
+                    {
+                        label: '資產來源管理',
+                        icon: 'pi pi-circle-fill',
+                        to: '/data_page/acquisition_source',
                     }
                 ]
             }

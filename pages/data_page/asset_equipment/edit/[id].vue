@@ -5,18 +5,22 @@ import { useRoute } from 'vue-router';
 import DepartmentService from '~/service/DepartmentService';
 import CustodianService from '~/service/CustodianService';
 import CategoryService from '~/service/CategoryService';
+import AcquisitionSourceService from '~/service/AcquisitionSourceService';
 import useAssetAPI from '~/composables/api/useAssetAPI';
 import { useAssetsStore } from '~/store/useAssetsStore';
 
 let departmentService = new DepartmentService();
 let custodianService = new CustodianService();
 let categorieService = new CategoryService();
+let acquisitionSourceService = new AcquisitionSourceService();
+
 const { updateAsset } = useAssetAPI()
 const { asset } = storeToRefs(useAssetsStore())
 
 let departments = ref([]);
 let custodians = ref([]);
 let categories = ref([]);
+let sources = ref([]);
 
 const route = useRoute();
 const toast = useToast();
@@ -27,16 +31,20 @@ const createAssetData = ref({
     specifications_detail:'',
     product_serial_number:'',
     acquisition_date: '',
-    acquisition_source: '',
-    useful_life_years: '',
-    acquisition_cost: '',
-    current_value: '',
+    acquisition_source_id: 0,
+    useful_life_years: 0,
+    acquisition_cost: 0,
+    current_value: 0,
     service_vendor: '',
     service_contact_phone: '',
     contact_person: '',
     warranty_period: '',
-    warranty_expiration_date: '',
-    department_id: '',
+    department_id: 0,
+    custodian_id: 0,
+    category_id: 0,
+    memo: '',
+    unit: '',
+    location: '',
 })
 
 init()
@@ -46,6 +54,7 @@ function init(){
     loadDepartments();
     loadCustodians();
     loadCategories();
+    loadSources();
 }
 async function fetchAssets(){
     createAssetData.value = asset.value
@@ -81,6 +90,16 @@ function loadCategories() {
     });
 }
 
+function loadSources() {
+    acquisitionSourceService.getAcquisitionSources().then((res) => {
+        return res.json()
+    }).then((data) => {
+        sources.value = data.acquisition_sources;
+    }).catch((err) => {
+        console.log(err);
+    });
+}
+
 </script>
 
 <template>
@@ -94,18 +113,24 @@ function loadCategories() {
                         <InputText id="asset_name" type="text" v-model="createAssetData.name" />
                     </div>
                     <div class="field col-4">
+                        <label class="mr-1 block" for="asset_memo">備註</label>
+                        <InputText id="asset_memo" type="text" v-model="createAssetData.memo" />
+                    </div>
+                </div>
+                <div class="col-12 flex flex-column md:flex-row">
+                    <div class="field col-4">
+                        <label class="mr-1 block" for="asset_product_code">產品序號</label>
+                        <InputText id="asset_product_code" type="text" v-model="createAssetData.product_serial_number" />
+                    </div>
+                    <div class="field col-4">
                         <label class="mr-1 block" for="asset_type">廠牌型號</label>
                         <InputText id="asset_type" type="text" v-model="createAssetData.brand_model" />
                     </div>
                 </div>
-                <div class="col-12 flex flex-column md:flex-row">
-                    <div class="field col-8">
+                <div class="col-12">
+                    <div class="field col-12">
                         <label class="mr-1 block" for="asset_type_detial">規格明細</label>
-                        <InputText class="w-full" id="asset_type_detial" type="text" v-model="createAssetData.specifications_detail" />
-                    </div>
-                    <div class="field col-4">
-                        <label class="mr-1 block" for="asset_product_code">產品序號</label>
-                        <InputText id="asset_product_code" type="text" v-model="createAssetData.product_serial_number" />
+                        <Textarea class="w-full" id="asset_type_detial" type="text" v-model="createAssetData.specifications_detail" />
                     </div>
                 </div>
                 <div class="flex flex-row flex-wrap flex-row md:flex-row">
@@ -117,8 +142,13 @@ function loadCategories() {
                     </div>
                     <div class="flex m-3">
                         <div class="field">
-                            <label class="block" for="asset_">取得來源</label>
-                            <InputText id="asset_get_day" type="text" v-model="createAssetData.acquisition_source" />
+                            <label class="block" for="acquisition_source">取得來源</label>
+                            <Dropdown class="w-full md:w-16rem" 
+                                id="acquisition_source" 
+                                v-model="createAssetData.acquisition_source_id" 
+                                :options="sources" 
+                                optionValue="id" 
+                                optionLabel="name" />
                         </div>
                     </div>
                     <div class="flex m-3">
@@ -168,7 +198,20 @@ function loadCategories() {
                         </div>
                     </div>
                 </div>
-
+                <div class="flex flex-row flex-wrap flex-row md:flex-row">
+                    <div class="flex m-3">
+                        <div class="field">
+                            <label class="block" for="location">存置地點</label>
+                            <InputText id="location" type="text" v-model="createAssetData.location" />
+                        </div>
+                    </div>
+                    <div class="flex m-3">
+                        <div class="field">
+                            <label class="block" for="unit">單位</label>
+                            <InputText id="unit" type="text" v-model="createAssetData.unit" />
+                        </div>
+                    </div>
+                </div>
                 <div class="col-12 flex flex-column md:flex-row">
                     <div class="field col">
                         <label class="mr-1 block" for="vendor_name">銷售維修廠商</label>
@@ -186,7 +229,7 @@ function loadCategories() {
                 <div class="col-12 flex flex-column md:flex-row">
                     <div class="field col">
                         <label class="mr-1 block" for="warranty_period">保固年限</label>
-                        <Calendar id="warranty_period" type="text" v-model="createAssetData.warranty_period" date-format="yy/mm/dd"/>
+                        <Calendar id="warranty_period" type="text" v-model="createAssetData.warranty_period" date-format="yy/mm/dd" />
                     </div>
                 </div>
                 <div class="col-12 flex justify-content-end">
