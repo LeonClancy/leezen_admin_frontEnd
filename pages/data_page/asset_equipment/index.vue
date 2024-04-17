@@ -41,6 +41,19 @@ function exportExcel() {
   })
 }
 
+function exportInventoryList() {
+  service.exportInventoryList().then((res) => {
+    return res.blob()
+  }).then((blob) => {
+    const url = window.URL.createObjectURL(new Blob([blob]))
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('download', '資產設備盤點清單.xlsx')
+    document.body.appendChild(link)
+    link.click()
+  })
+}
+
 </script>
 <template>
   <div class="grid">
@@ -49,9 +62,10 @@ function exportExcel() {
         <h5>資產設備基本資料</h5>
         <div class="col-12 flex justify-content-end">
           <NuxtLink to="asset_equipment/create">
-            <Button label="新增" class="p-button-outlined p-button-secondary mr-2 mb-2"/>
+            <Button label="新增" icon="pi pi-plus" class="p-button-outlined p-button-secondary mr-2 mb-2"/>
           </NuxtLink>
-          <Button label="列印" class="p-button-outlined p-button-secondary mr-2 mb-2" @click="exportExcel()" />
+          <Button label="財務列表" icon="pi pi-file-export" class="p-button-outlined p-button-secondary mr-2 mb-2" @click="exportExcel()" />
+          <Button label="盤點清單" icon="pi pi-file-export" class="p-button-outlined p-button-secondary mr-2 mb-2" @click="exportInventoryList()" />
         </div>
         <DataTable :loading="loading" :value="assetsList" paginator showGridlines :rows="10" dataKey="id">
           <!-- <Column field="index" header="編號" style="min-width: 12rem">

@@ -10,12 +10,11 @@ export declare interface Asset {
 export declare interface CreateAssetRequest {
     acquisition_cost: number;
     acquisition_date: string;
-    acquisition_source: string;
+    acquisition_source_id: number;
     // asset_number: string;
     brand_model: string;
     category_id: number;
     contact_person: string;
-    current_value: number;
     custodian_id: number;
     department_id: number;
     name: string;
@@ -25,6 +24,9 @@ export declare interface CreateAssetRequest {
     specifications_detail: string;
     useful_life_years: number;
     warranty_period: string;
+    memo: string;
+    unit: string;
+    location: string;
 }
 export declare interface UpdateAssetRequest {
     acquisition_cost: number;

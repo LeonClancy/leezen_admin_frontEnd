@@ -72,4 +72,14 @@ export default class AssetService {
             }
         })
     }
+
+    async exportInventoryList() {
+        return fetch(`${this.apiBaseUrl}/assets/export/inventory-list`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
+        })
+    }
 }
