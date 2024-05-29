@@ -16,6 +16,13 @@ const onTopBarMenuButton = () => {
     topbarMenuActive.value = !topbarMenuActive.value;
 };
 
+async function logout() {
+    localStorage.removeItem('token');
+    await navigateTo({
+        path: '/auth/login'
+    });
+};
+
 const topbarMenuClasses = computed(() => {
     return {
         'layout-topbar-menu-mobile-active': topbarMenuActive.value
@@ -65,9 +72,9 @@ const isOutsideClicked = (event) => {
         </button>
 
         <div class="layout-topbar-menu" :class="topbarMenuClasses">
-            <button @click="onTopBarMenuButton()" class="p-link layout-topbar-button">
-                <i class="pi pi-user"></i>
-                <span>Profile</span>
+            <button class="p-link layout-topbar-button" @click="logout()">
+                <i class="pi pi-sign-out"></i>
+                <span >登出</span>
             </button>
         </div>
     </div>
