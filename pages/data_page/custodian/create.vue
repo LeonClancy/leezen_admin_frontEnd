@@ -103,10 +103,10 @@ onMounted(() => {
                         </div>
                     </div>
                     <div class="field col-4">
-                        <label class="mr-1 block" for="custodian__unit_number">身分證字號</label>
+                        <label class="mr-1 block" for="custodian__unit_number">員工編號</label>
                         <div>
                             <InputText id="custodian__unit_number" :class="[errors.id_number ? 'p-invalid' : '']" type="text" v-model="id_number" v-bind="id_numberAttrs"/>
-                            <p>{{ errors.id_number? '請填寫身分證字號' : '' }}</p>
+                            <p>{{ errors.id_number? '請填寫員工編號' : '' }}</p>
                         </div>
                     </div>
                     <div class="field col-4">
