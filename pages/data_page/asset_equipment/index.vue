@@ -3,19 +3,30 @@ import { useAssetsStore } from "@/store/useAssetsStore"
 import useAssetAPI from "~/composables/api/useAssetAPI";
 import AssetService from "~/service/AssetService";
 import moment from 'moment';
+import InputText from "primevue/inputtext";
+import Dropdown from "primevue/dropdown";
+import DepartmentService from "~/service/DepartmentService";
 
 const { assetsList } = storeToRefs(useAssetsStore())
 const { setAssetsList, setCurrentAssetId } = useAssetsStore()
 const { getAssets } = useAssetAPI()
 const service = new AssetService()
+const departments = ref([]);
+const departmentService = new DepartmentService()
 
 const loading = ref(true)
 onMounted(() => {
   loadAssets()
+  loadDepartments()
+})
+
+const searchParam = ref({
+  name: '',
+  department_id: ''
 })
 
 async function loadAssets() {
-  const assetsList = await getAssets()
+  const assetsList = await getAssets(searchParam.value)
   setAssetsList(assetsList)
   loading.value = false
 }
@@ -54,12 +65,39 @@ function exportInventoryList() {
   })
 }
 
+function loadDepartments() {
+  departmentService.getDepartmentsOptions()
+    .then((data) => {
+      departments.value = data
+    })
+}
+
 </script>
 <template>
   <div class="grid">
     <div class="col-12">
       <div class="card">
-        <h5>資產設備基本資料</h5>
+        <h4>資產設備基本資料</h4>
+        <h5>搜尋</h5>
+        <div class="formgrid grid">
+          <div class="field col-4">
+            <label for="name">資產名稱</label>
+            <InputText id="name" type="text" v-model="searchParam.name" />
+          </div>
+          <div class="field col-4">
+            <label for="department">部門</label>
+            <Dropdown 
+              id="department"
+              v-model="searchParam.department_id" 
+              :options="departments"
+              optionValue="id"
+              optionLabel="name"
+              showClear />
+          </div>
+        </div>
+        <div class="col-12 flex justify-content-end">
+          <Button label="搜尋" icon="pi pi-search" class="p-button-outlined p-button-secondary mr-2 mb-2" @click="loadAssets()" />
+        </div>
         <div class="col-12 flex justify-content-end">
           <NuxtLink to="asset_equipment/create">
             <Button label="新增" icon="pi pi-plus" class="p-button-outlined p-button-secondary mr-2 mb-2"/>

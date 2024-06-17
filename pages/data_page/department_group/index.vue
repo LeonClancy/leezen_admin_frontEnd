@@ -107,6 +107,8 @@ function viewData(department:Department){
   navigateTo(`department_group/${department.id}`)
 }
 
+const filters = ref({})
+
 </script>
 
 <template>
@@ -118,9 +120,31 @@ function viewData(department:Department){
           <Button label="新增" class="p-button-outlined p-button-secondary mr-2 mb-2" @click="addDepartment(null)" />
           <Button label="列印" class="p-button-outlined p-button-secondary mr-2 mb-2" />
         </div>
-        <TreeTable :value="departmentList" :loading="loading">
-          <Column field="code" header="部門代號"></Column>
-          <Column field="name" header="部門名稱" expander="true"></Column>
+        <TreeTable 
+          :value="departmentList" 
+          :loading="loading" 
+          :filters="filters"
+        >
+          <template #header>
+            <div class="text-right">
+              <IconField iconPosition="left">
+                <InputIcon>
+                  <i class="pi pi-search" />
+                </InputIcon>
+                <InputText v-model="filters['global']" placeholder="Global Search" />
+              </IconField>
+            </div>
+          </template>
+          <Column field="code" header="部門代號">
+            <template #filter>
+              <InputText v-model="filters['code']" class="p-column-filter" />
+            </template>
+          </Column>
+          <Column field="name" header="部門名稱" expander="true">
+            <template #filter>
+              <InputText v-model="filters['name']" class="p-column-filter" />
+            </template>
+          </Column>
           <Column header="操作">
             <template #body="slotProps">
               <div class="flex flex-wrap gap-2">

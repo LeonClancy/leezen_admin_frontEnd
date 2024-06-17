@@ -8,10 +8,18 @@ import useApiBase from "./useApiBase"
 
 export default () => {
   const { fetchApiBase } = useApiBase()
+  const apiBaseUrl = useRuntimeConfig().public.apiBaseUrl
 
   //MyModel API
-  async function getCustodians(){
-   const { custodians } = await fetchApiBase(`/custodians`,"get");
+  async function getCustodians(searchParam) {
+    let url = new URL('api/custodians', apiBaseUrl)
+    if (searchParam.name) {
+      url.searchParams.append('name', searchParam.name)
+    }
+    if (searchParam.department_id) {
+      url.searchParams.append('department_id', searchParam.department_id.toString())
+    }
+    const { custodians } = await fetchApiBase(url.toString(), "get");
     return custodians as Custodian[]; 
   }
   async function getCustodian(id:string){

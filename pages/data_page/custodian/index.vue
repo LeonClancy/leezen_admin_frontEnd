@@ -3,6 +3,9 @@ import { useCustodianStore } from "@/store/useCustodianStore"
 import useCustodianAPI from "@/composables/api/useCustodianAPI"
 import { useConfirm } from "primevue/useconfirm";
 import { useToast } from "primevue/usetoast";
+import InputText from "primevue/inputtext";
+import Dropdown from "primevue/dropdown";
+import DepartmentService from "~/service/DepartmentService";
 
 const confirm = useConfirm();
 const toast = useToast();
@@ -11,12 +14,30 @@ const { custodianList } = storeToRefs(useCustodianStore())
 const { setCustodianList, setCurrentCustodianId } = useCustodianStore()
 const { deleteCustodian, getCustodians } = useCustodianAPI()
 
+const departments = ref([]);
+const departmentService = new DepartmentService()
+
 const loading = ref(true)
+
 onMounted(() => {
   fetchCustodians();
+  loadDepartments();
 })
+
+function loadDepartments() {
+  departmentService.getDepartmentsOptions()
+    .then((data) => {
+      departments.value = data
+    })
+}
+
+const searchParam = ref({
+  name: null,
+  department_id: null,
+})
+
 async function fetchCustodians() {
-  const custodians = await getCustodians();
+  const custodians = await getCustodians(searchParam.value);
   loading.value = false;
   setCustodianList(custodians);
 }
@@ -46,6 +67,26 @@ async function deleteData(id:number) {
     <div class="col-12">
       <div class="card">
         <h5>保管人基本資料</h5>
+        <h5>搜尋</h5>
+        <div class="formgrid grid">
+          <div class="field col-4">
+            <label for="name">資產名稱</label>
+            <InputText id="name" type="text" v-model="searchParam.name" />
+          </div>
+          <div class="field col-4">
+            <label for="department">部門</label>
+            <Dropdown 
+              id="department"
+              v-model="searchParam.department_id" 
+              :options="departments"
+              optionValue="id"
+              optionLabel="name" 
+              showClear />
+          </div>
+        </div>
+        <div class="col-12 flex justify-content-end">
+          <Button label="搜尋" icon="pi pi-search" class="p-button-outlined p-button-secondary mr-2 mb-2" @click="fetchCustodians()" />
+        </div>
         <div class="col-12 flex justify-content-end">
           <NuxtLink to="custodian/create">
             <Button label="新增" class="p-button-outlined p-button-secondary mr-2 mb-2" />

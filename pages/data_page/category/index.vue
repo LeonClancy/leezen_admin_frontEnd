@@ -6,13 +6,33 @@
         <div class="col-12 flex justify-content-end">
             <Button label="新增" class="p-button-outlined p-button-secondary mr-2 mb-2" @click="addCategory(null)" />
         </div>
-        <TreeTable :value="categories">
+        <TreeTable 
+            :value="categories"
+            :loading="loading" 
+            :filters="filters"
+        >
+            <template #header>
+                <div class="text-right">
+                    <IconField iconPosition="left">
+                        <InputIcon>
+                            <i class="pi pi-search" />
+                        </InputIcon>
+                            <InputText v-model="filters['global']" placeholder="Global Search" />
+                    </IconField>
+                </div>
+            </template>
             <Column field="name" header="類型名稱">
+                <template #filter>
+                    <InputText v-model="filters['code']" class="p-column-filter" />
+                </template>
                 <template #body="slotProps">
                     {{ slotProps.node.name }}
                 </template>
             </Column>
             <Column field="code" header="類型代號" expander="true">
+                <template #filter>
+                    <InputText v-model="filters['name']" class="p-column-filter" />
+                </template>
                 <template #body="slotProps">
                     {{ slotProps.node.code }}
                 </template>
@@ -71,6 +91,8 @@ import CategoryService from '~/service/CategoryService';
 const service = new CategoryService();
 
 let categories = ref([]);
+
+const filters = ref({})
 
 let isaddCategoryDialogVisble = ref(false);
 let newCategoryParent = ref(null);
