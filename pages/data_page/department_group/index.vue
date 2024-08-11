@@ -118,7 +118,6 @@ const filters = ref({})
         <h5>部門群組</h5>
         <div class="col-12 flex justify-content-end">
           <Button label="新增" class="p-button-outlined p-button-secondary mr-2 mb-2" @click="addDepartment(null)" />
-          <Button label="列印" class="p-button-outlined p-button-secondary mr-2 mb-2" />
         </div>
         <TreeTable 
           :value="departmentList" 

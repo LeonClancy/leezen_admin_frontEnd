@@ -70,7 +70,7 @@ async function deleteData(id:number) {
         <h5>搜尋</h5>
         <div class="formgrid grid">
           <div class="field col-4">
-            <label for="name">資產名稱</label>
+            <label for="name">保管人姓名</label>
             <InputText id="name" type="text" v-model="searchParam.name" />
           </div>
           <div class="field col-4">
