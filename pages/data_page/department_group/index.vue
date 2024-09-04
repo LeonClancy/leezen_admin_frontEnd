@@ -52,6 +52,12 @@ function loadDepartmentNodeData(item: Department) {
     code: item.code,
     depth: item.depth,
   };
+  if (item.data.depth == 1) {
+    item.data.code = '> ' + item.data.code
+  }
+  if (item.data.depth == 2) {
+    item.data.code = '> > ' + item.data.code
+  }
 }
 
 function addDepartment(parentDepartment = null) {
