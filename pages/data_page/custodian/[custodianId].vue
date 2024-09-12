@@ -6,6 +6,7 @@ import { useToast } from 'primevue/usetoast';
 import DepartmentService from '~/service/DepartmentService';
 import PositionService from '~/service/PositionService';
 import StatusService from '~/service/StatusService';
+import moment from 'moment';
 
 const { custodian,currentCustianId  } = storeToRefs(useCustodianStore())
 const { updateCustodian } = useCustodianAPI()
@@ -82,7 +83,7 @@ async function initCustodianInputData(){
     name:custodian.value.name,
     email:custodian.value.email,
     id_number:custodian.value.id_number,
-    birthday:custodian.value.birthday,
+    birthday: moment(custodian.value.birthday).format('YYYY/MM/DD') , // format date
     contact_number:custodian.value.contact_number,
     mobile_number:custodian.value.mobile_number,
     address:custodian.value.address,
@@ -146,7 +147,7 @@ async function fetchUpdateCustodianData(){
             <label class="mr-1 block" for="custodian__birth_date">生日</label>
             <div>
               <Calendar id="custodian__birth_date" :class="[errors.birthday ? 'p-invalid' : '']" type="text"
-                v-model="birthday" v-bind="birthdayAttrs" />
+                v-model="birthday" v-bind="birthdayAttrs" dateFormat="yy/mm/dd" />
               <p>{{ errors.birthday ? '請選擇日期' : '' }}</p>
             </div>
           </div>
