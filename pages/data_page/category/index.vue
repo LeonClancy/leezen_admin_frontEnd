@@ -25,10 +25,16 @@
                 <template #filter>
                     <InputText v-model="filters['name']" class="p-column-filter" />
                 </template>
+                <template #body="slotProps">
+                    {{ getName(slotProps.node) }}
+                </template>
             </Column>
             <Column field="code" header="類型代號" expander="true">
                 <template #filter>
                     <InputText v-model="filters['code']" class="p-column-filter" />
+                </template>
+                <template #body="slotProps">
+                    {{ slotProps.node.code }}
                 </template>
             </Column>
             <Column header="操作">
@@ -168,6 +174,14 @@ function submitEditCategory() {
     }).catch((err) => {
         console.log(err);
     });
+}
+
+function getName(category) {
+    console.log(category);
+    if (category.depth == 1) {
+        return '> ' + category.name
+    }
+    return category.name
 }
 
 onMounted(() => {

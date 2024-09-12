@@ -52,12 +52,6 @@ function loadDepartmentNodeData(item: Department) {
     code: item.code,
     depth: item.depth,
   };
-  if (item.data.depth == 1) {
-    item.data.code = '> ' + item.data.code
-  }
-  if (item.data.depth == 2) {
-    item.data.code = '> > ' + item.data.code
-  }
 }
 
 function addDepartment(parentDepartment = null) {
@@ -113,6 +107,17 @@ function viewData(department:Department){
   navigateTo(`department_group/${department.id}`)
 }
 
+function getCode(department) {
+  console.log(department);
+  if (department.data.depth == 1) {
+    return '> ' + department.data.code
+  }
+  if (department.data.depth == 2) {
+    return '> > ' + department.data.code
+  }
+  return department.data.code
+}
+
 const filters = ref({})
 
 </script>
@@ -143,6 +148,9 @@ const filters = ref({})
           <Column field="code" header="部門代號">
             <template #filter>
               <InputText v-model="filters['code']" class="p-column-filter" />
+            </template>
+            <template #body="slotProps">
+              {{ getCode(slotProps.node) }}
             </template>
           </Column>
           <Column field="name" header="部門名稱" expander="true">
