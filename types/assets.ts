@@ -27,6 +27,7 @@ export declare interface CreateAssetRequest {
     memo: string;
     unit: string;
     location: string;
+    uniform_number: string;
 }
 export declare interface UpdateAssetRequest {
     acquisition_cost: number;
@@ -46,4 +47,5 @@ export declare interface UpdateAssetRequest {
     specifications_detail: string;
     useful_life_years: number;
     warranty_period: string;
+    uniform_number: string;
 }

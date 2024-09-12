@@ -136,6 +136,11 @@ function loadDepartments() {
               {{ data.product_serial_number }}
             </template>
           </Column>
+          <Column field="uniform_number" header="統一編號" style="min-width: 12rem">
+            <template #body="{ data }">
+              {{ data.uniform_number }}
+            </template>
+          </Column>
           <Column field="acquisition_date" header="取得日期" style="min-width: 12rem">
             <template #body="{ data }">
               {{ moment(data.acquisition_date).format('YYYY/MM/DD') }}

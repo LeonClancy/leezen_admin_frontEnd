@@ -39,6 +39,7 @@ const createAssetData = ref<CreateAssetRequest>({
     memo: '',
     unit: '',
     location: '',
+    uniform_number: '',
 })
 
 
@@ -105,6 +106,10 @@ function validate() {
         toast.add({ severity: 'error', summary: '錯誤', detail: '請輸入產品保固年限', life: 3000 });
         throw new Error('請輸入產品保固年限');
     }
+    if (!createAssetData.value.uniform_number) {
+        toast.add({ severity: 'error', summary: '錯誤', detail: '請輸入統編', life: 3000 });
+        throw new Error('請輸入統編');
+    }
 }
 
 onMounted(() => {
@@ -150,6 +155,10 @@ onMounted(() => {
                     <div class="field col-4">
                         <label class="mr-1 block" for="asset_memo">備註/狀態（選填）</label>
                         <InputText id="asset_memo" type="text" v-model="createAssetData.memo" />
+                    </div>
+                    <div class="field col-4">
+                        <label class="mr-1 block" for="asset_type">統編<span class="required">*</span>（若沒有統編則可填「無」）</label>
+                        <InputText id="asset_type" type="text" v-model="createAssetData.uniform_number" />
                     </div>
                 </div>
                 <div class="col-12 flex flex-column md:flex-row">

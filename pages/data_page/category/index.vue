@@ -23,18 +23,12 @@
             </template>
             <Column field="name" header="類型名稱">
                 <template #filter>
-                    <InputText v-model="filters['code']" class="p-column-filter" />
-                </template>
-                <template #body="slotProps">
-                    {{ slotProps.node.name }}
+                    <InputText v-model="filters['name']" class="p-column-filter" />
                 </template>
             </Column>
             <Column field="code" header="類型代號" expander="true">
                 <template #filter>
-                    <InputText v-model="filters['name']" class="p-column-filter" />
-                </template>
-                <template #body="slotProps">
-                    {{ slotProps.node.code }}
+                    <InputText v-model="filters['code']" class="p-column-filter" />
                 </template>
             </Column>
             <Column header="操作">
