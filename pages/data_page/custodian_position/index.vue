@@ -69,12 +69,12 @@ onMounted(() => {
     <div class="grid">
         <div class="col-12">
             <div class="card">
-                <h5>保管人職務管理</h5>
+                <h5>保管人職位管理</h5>
                 <div class="col-12 flex justify-content-end">
                     <Button label="新增" class="p-button-outlined p-button-secondary mr-2 mb-2" @click="showAddPositionDialog()"/>
                 </div>
                 <DataTable :loading="loading" :value="positions" showGridlines>
-                    <Column field="name" header="職務名稱"></Column>
+                    <Column field="name" header="職位名稱"></Column>
                     <Column header="操作">
                         <template #body="slotProps">
                             <Button type="button" @click="showEditPosition(slotProps.data)" label="編輯" />
@@ -84,9 +84,9 @@ onMounted(() => {
             </div>
         </div>
     </div>
-    <Dialog v-bind:visible="isAddPositionDialogVisible" header="新增職務" modal>
+    <Dialog v-bind:visible="isAddPositionDialogVisible" header="新增職位" modal>
         <div class="flex align-items-center gap-3 mb-5">
-            <label for="name" class="font-semibold w-6rem">職務名稱</label>
+            <label for="name" class="font-semibold w-6rem">職位名稱</label>
             <InputText id="name" class="flex-auto" v-model="newPosition.name"/>
         </div>
         <div class="flex justify-content-end gap-2">
@@ -94,9 +94,9 @@ onMounted(() => {
             <Button type="button" label="Save" @click="submitAddPosition()"></Button>
         </div>
     </Dialog>
-    <Dialog v-bind:visible="isEditPositionDialogVisible" header="編輯職務" modal>
+    <Dialog v-bind:visible="isEditPositionDialogVisible" header="編輯職位" modal>
         <div class="flex align-items-center gap-3 mb-5">
-            <label for="name" class="font-semibold w-6rem">職務名稱</label>
+            <label for="name" class="font-semibold w-6rem">職位名稱</label>
             <InputText id="name" class="flex-auto" v-model="editPosition.name"/>
         </div>
         <div class="flex justify-content-end gap-2">

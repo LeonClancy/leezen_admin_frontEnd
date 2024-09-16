@@ -75,7 +75,7 @@
             </div>
           </div>
           <div class="field col">
-            <label class="mr-1 block" for="position">職務名稱</label>
+            <label class="mr-1 block" for="position">職位名稱</label>
             <InputText id="position" type="text" />
           </div>
         </div>

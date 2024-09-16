@@ -180,11 +180,11 @@ async function fetchUpdateCustodianData(){
             </div>
           </div>
           <div class="field col-4 md:col-3">
-            <label class="block" for="position">職務名稱</label>
+            <label class="block" for="position">職位名稱</label>
             <div>
               <Dropdown id="position" :class="[errors.position_id ? 'p-invalid' : '']" v-model="position_id"
                 v-bind="positionAttrs" :options="positions" optionLabel="name" optionValue="id"></Dropdown>
-              <p>{{ errors.position_id ? '請選擇職務名稱' : '' }}</p>
+              <p>{{ errors.position_id ? '請選擇職位名稱' : '' }}</p>
             </div>
           </div>
           <div class="field col-4 md:col-3">
@@ -192,7 +192,7 @@ async function fetchUpdateCustodianData(){
             <div>
               <Dropdown id="status" :class="[errors.status ? 'p-invalid' : '']" v-model="status"
                 v-bind="statusAttrs" :options="statuses" optionLabel="name" optionValue="id"></Dropdown>
-              <p>{{ errors.status ? '請選擇職務名稱' : '' }}</p>
+              <p>{{ errors.status ? '請選擇職位名稱' : '' }}</p>
             </div>
           </div>
         </div>

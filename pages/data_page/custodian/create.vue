@@ -138,10 +138,10 @@ onMounted(() => {
                     </div>
                     <div class="field col-4">
                         <div class="field">
-                            <label class="block" for="position">職務</label>
+                            <label class="block" for="position">職位</label>
                             <div>
                                 <Dropdown id="position" :class="[errors.position_id ? 'p-invalid' : '']" v-model="position_id" v-bind="positionAttrs" :options="positions" optionLabel="name" optionValue="id"></Dropdown>
-                                <p>{{ errors.position_id ? '請選擇職務' : '' }}</p>
+                                <p>{{ errors.position_id ? '請選擇職位' : '' }}</p>
                             </div>
                         </div>
                     </div>
