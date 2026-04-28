@@ -6,11 +6,16 @@ export declare interface Asset {
     product_code: string;
     acquire_date: string;
     acquisition_cost: number;
+    asset_status_id: number | null;
+    asset_status?: {
+        name: string;
+    } | null;
 }
 export declare interface CreateAssetRequest {
     acquisition_cost: number;
     acquisition_date: string;
     acquisition_source_id: number;
+    asset_status_id: number | null;
     // asset_number: string;
     brand_model: string;
     category_id: number;
@@ -32,7 +37,8 @@ export declare interface CreateAssetRequest {
 export declare interface UpdateAssetRequest {
     acquisition_cost: number;
     acquisition_date: string;
-    acquisition_source: string;
+    acquisition_source_id: number;
+    asset_status_id: number | null;
     // asset_number: string;
     brand_model: string;
     category_id: number;
@@ -47,5 +53,8 @@ export declare interface UpdateAssetRequest {
     specifications_detail: string;
     useful_life_years: number;
     warranty_period: string;
+    memo: string;
+    unit: string;
+    location: string;
     uniform_number: string;
 }

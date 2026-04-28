@@ -35,6 +35,11 @@ const model = ref([
                         to: '/data_page/category'
                     },
                     {
+                        label: '資產狀態管理',
+                        icon: 'pi pi-circle-fill',
+                        to: '/data_page/asset_status',
+                    },
+                    {
                         label: '保管人職位管理',
                         icon: 'pi pi-circle-fill',
                         to: '/data_page/custodian_position',

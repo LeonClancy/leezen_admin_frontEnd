@@ -6,6 +6,7 @@ import DepartmentService from '~/service/DepartmentService';
 import CustodianService from '~/service/CustodianService';
 import CategoryService from '~/service/CategoryService';
 import AcquisitionSourceService from '~/service/AcquisitionSourceService';
+import AssetStatusService from '~/service/AssetStatusService';
 import useAssetAPI from '~/composables/api/useAssetAPI';
 import { useAssetsStore } from '~/store/useAssetsStore';
 import moment from 'moment';
@@ -14,6 +15,7 @@ let departmentService = new DepartmentService();
 let custodianService = new CustodianService();
 let categorieService = new CategoryService();
 let acquisitionSourceService = new AcquisitionSourceService();
+let assetStatusService = new AssetStatusService();
 
 const { updateAsset } = useAssetAPI()
 const { asset } = storeToRefs(useAssetsStore())
@@ -22,6 +24,7 @@ let departments = ref([]);
 let custodians = ref([]);
 let categories = ref([]);
 let sources = ref([]);
+let assetStatuses = ref([]);
 
 const route = useRoute();
 const toast = useToast();
@@ -42,6 +45,7 @@ const createAssetData = ref({
     department_id: 0,
     custodian_id: 0,
     category_id: 0,
+    asset_status_id: null,
     memo: '',
     unit: '',
     location: '',
@@ -56,11 +60,15 @@ function init(){
     loadCustodians();
     loadCategories();
     loadSources();
+    loadAssetStatuses();
 }
 async function fetchAssets(){
     asset.value.acquisition_date = moment(asset.value.acquisition_date).format('YYYY/MM/DD')
     asset.value.warranty_period = moment(asset.value.warranty_period).format('YYYY/MM/DD')
-    createAssetData.value = asset.value
+    createAssetData.value = {
+        ...asset.value,
+        asset_status_id: asset.value.asset_status_id ?? null,
+    }
 }
 async function submitAsset() {
     validate()
@@ -168,6 +176,16 @@ function loadSources() {
     });
 }
 
+function loadAssetStatuses() {
+    assetStatusService.getAssetStatuses().then((res) => {
+        return res.json()
+    }).then((data) => {
+        assetStatuses.value = data.asset_statuses;
+    }).catch((err) => {
+        console.log(err);
+    });
+}
+
 </script>
 
 <template>
@@ -176,15 +194,25 @@ function loadSources() {
             <div class="card">
                 <h5>編輯資產設備</h5>
                 <div class="col-12 flex flex-column md:flex-row">
-                    <div class="field col-4">
+                    <div class="field col-12 md:col-3">
                         <label class="mr-1 block" for="asset_name">資產名稱<span class="required">*</span></label>
                         <InputText id="asset_name" type="text" v-model="createAssetData.name" />
                     </div>
-                    <div class="field col-4">
-                        <label class="mr-1 block" for="asset_memo">備註/狀態（選填）</label>
+                    <div class="field col-12 md:col-3">
+                        <label class="mr-1 block" for="asset_status">狀態</label>
+                        <Dropdown class="w-full" id="asset_status"
+                            v-model="createAssetData.asset_status_id"
+                            :options="assetStatuses"
+                            optionValue="id"
+                            optionLabel="name"
+                            showClear
+                            filter />
+                    </div>
+                    <div class="field col-12 md:col-3">
+                        <label class="mr-1 block" for="asset_memo">備註（選填）</label>
                         <InputText id="asset_memo" type="text" v-model="createAssetData.memo" />
                     </div>
-                    <div class="field col-4">
+                    <div class="field col-12 md:col-3">
                         <label class="mr-1 block" for="asset_type">統編<span class="required">*</span>（若沒有統編則可填「無」）</label>
                         <InputText id="asset_type" type="text" v-model="createAssetData.uniform_number" />
                     </div>

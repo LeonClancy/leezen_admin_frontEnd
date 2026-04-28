@@ -126,6 +126,11 @@ function loadDepartments() {
               {{ data.name }}
             </template>
           </Column>
+          <Column field="asset_status" header="狀態" style="min-width: 10rem">
+            <template #body="{ data }">
+              {{ data.asset_status?.name || '' }}
+            </template>
+          </Column>
           <Column field="type" header="廠牌型號" style="min-width: 12rem">
             <template #body="{ data }">
               {{ data.brand_model }}
