@@ -155,17 +155,17 @@ onMounted(() => {
             <div class="card">
                 <h5>新增資產設備</h5>
                 <div class="col-12 flex flex-column md:flex-row">
-                    <!-- <div class="field col-12 md:col-3">
+                    <!-- <div class="field col-4">
                         <label class="mr-1 block" for="asset_id">資產編號</label>
                         <InputText id="asset_id" type="text" v-model="createAssetData.asset_number" />
                     </div> -->
-                    <div class="field col-12 md:col-3">
+                    <div class="field col-4">
                         <label class="mr-1 block" for="asset_name">資產名稱<span class="required">*</span></label>
                         <InputText id="asset_name" type="text" v-model="createAssetData.name" />
                     </div>
-                    <div class="field col-12 md:col-3">
+                    <div class="field col-4">
                         <label class="mr-1 block" for="asset_status">狀態</label>
-                        <Dropdown class="w-full" id="asset_status"
+                        <Dropdown class="w-full md:w-16rem" id="asset_status"
                             v-model="createAssetData.asset_status_id"
                             :options="assetStatuses"
                             optionValue="id"
@@ -173,16 +173,16 @@ onMounted(() => {
                             showClear
                             filter />
                     </div>
-                    <div class="field col-12 md:col-3">
+                    <div class="field col-4">
                         <label class="mr-1 block" for="asset_memo">備註（選填）</label>
                         <InputText id="asset_memo" type="text" v-model="createAssetData.memo" />
                     </div>
-                    <div class="field col-12 md:col-3">
+                </div>
+                <div class="col-12 flex flex-column md:flex-row">
+                    <div class="field col-4">
                         <label class="mr-1 block" for="asset_type">統編<span class="required">*</span>（若沒有統編則可填「無」）</label>
                         <InputText id="asset_type" type="text" v-model="createAssetData.uniform_number" />
                     </div>
-                </div>
-                <div class="col-12 flex flex-column md:flex-row">
                     <div class="field col-4">
                         <label class="mr-1 block" for="asset_product_code">產品序號<span class="required">*</span></label>
                         <InputText id="asset_product_code" type="text" v-model="createAssetData.product_serial_number" />
