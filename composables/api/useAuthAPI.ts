@@ -1,5 +1,4 @@
 import { AuthLogin, AuthRegistry, AuthLoginRespon, AuthRegistryRespon } from '@/types/auth';
-import { type CredentialResponse } from 'vue3-google-signin';
 import useApiBase from './useApiBase';
 
 export default () => {
@@ -10,8 +9,8 @@ export default () => {
         const res = await fetchApiBase('/login', 'post', payload);
         return res as AuthLoginRespon;
     }
-    async function googleLogin(payload: CredentialResponse) {
-        const { token }  = await fetchApiBase('/auth/google', 'post', payload);
+    async function googleLogin(credential: string) {
+        const { token }  = await fetchApiBase('/auth/google', 'post', { credential });
         return token as string
     }
     async function registry(payload: AuthRegistry) {

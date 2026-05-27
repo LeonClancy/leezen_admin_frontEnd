@@ -17,7 +17,7 @@ let categorieService = new CategoryService();
 let acquisitionSourceService = new AcquisitionSourceService();
 let assetStatusService = new AssetStatusService();
 
-const { updateAsset } = useAssetAPI()
+const { getAsset, updateAsset } = useAssetAPI()
 const { asset } = storeToRefs(useAssetsStore())
 
 let departments = ref([]);
@@ -52,7 +52,9 @@ const createAssetData = ref({
     uniform_number: '',
 })
 
-init()
+onMounted(() => {
+    init()
+})
 
 function init(){
     fetchAssets()
@@ -63,11 +65,20 @@ function init(){
     loadAssetStatuses();
 }
 async function fetchAssets(){
-    asset.value.acquisition_date = moment(asset.value.acquisition_date).format('YYYY/MM/DD')
-    asset.value.warranty_period = moment(asset.value.warranty_period).format('YYYY/MM/DD')
+    const routeAssetId = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id
+    const selectedAsset = asset.value ?? await getAsset(routeAssetId)
+
+    if (!selectedAsset) {
+        toast.add({ severity: 'error', summary: '錯誤', detail: '找不到資產設備資料', life: 3000 });
+        navigateTo('/data_page/asset_equipment');
+        return
+    }
+
     createAssetData.value = {
-        ...asset.value,
-        asset_status_id: asset.value.asset_status_id ?? null,
+        ...selectedAsset,
+        acquisition_date: selectedAsset.acquisition_date ? moment(selectedAsset.acquisition_date).format('YYYY/MM/DD') : '',
+        warranty_period: selectedAsset.warranty_period ? moment(selectedAsset.warranty_period).format('YYYY/MM/DD') : '',
+        asset_status_id: selectedAsset.asset_status_id ?? null,
     }
 }
 async function submitAsset() {

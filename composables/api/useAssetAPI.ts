@@ -29,8 +29,8 @@ export default () => {
       return asset as Asset
     }
     async function getAsset(id){
-      const { assets } = await fetchApiBase(`/assets/${id}`, 'get');
-      return assets as Asset[]; 
+      const { asset } = await fetchApiBase(`/assets/${id}`, 'get');
+      return asset as Asset;
     }
 
     return {
